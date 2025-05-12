@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  coordinator:
+    build: ./coordinator
+    container_name: coordinator
+    ports:
+      - "5000:5000"
+
+  executor1:
+    build: ./executor
+    container_name: executor1
+    environment:
+      - EXECUTOR_ID=executor1
+      - ROS_ENV=ros_humble
+      - COORDINATOR_URL=http://coordinator:5000
+    depends_on:
+      - coordinator
+
+
