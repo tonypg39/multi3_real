@@ -13,6 +13,7 @@ services:
     build: ./executor
     container_name: executor1
     environment:
+      - DISPLAY=${DISPLAY}
       - REAL_ROBOT=0
       - EXECUTOR_ID=executor1
       - ROBOT_NAME=robot_1
@@ -20,13 +21,18 @@ services:
       - ROS_ENV=ros_humble
       - ROS_DOMAIN=0
       - COORDINATOR_URL=http://coordinator:5000
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
     depends_on:
       - coordinator
-  
+    network_mode: host  # optional: required for some ROS GUI tools like RViz to find ROS master
+    privileged: true
+
   executor2:
     build: ./executor
     container_name: executor2
     environment:
+      - DISPLAY=${DISPLAY}
       - REAL_ROBOT=0
       - EXECUTOR_ID=executor2
       - ROBOT_NAME=robot_2
@@ -34,7 +40,10 @@ services:
       - ROS_ENV=ros_humble
       - ROS_DOMAIN=1
       - COORDINATOR_URL=http://coordinator:5000
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
     depends_on:
       - coordinator
+    network_mode: host  # optional: required for some ROS GUI tools like RViz to find ROS master
 
 

@@ -13,7 +13,8 @@ COPY multi3_exec_ws/src ./src
 RUN apt-get update && apt-get install -y \
     python3-pip \
     build-essential \
-    ros-humble-nav2-msgs \
+    ros-humble-nav2-msgs \ 
+    ros-humble-rviz2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python packages if needed
