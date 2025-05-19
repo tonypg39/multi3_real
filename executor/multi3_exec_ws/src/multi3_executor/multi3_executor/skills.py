@@ -98,14 +98,15 @@ class SendSkill():
         self.finish_event = finish_event
         self.params = params
         self.success = False
-        self.publisher = self.node.create_publisher(String, "/mission_signals",10)
+        # self.publisher = self.node.create_publisher(String, "/mission_signals",10)
     
     def exec(self, virtual_state,virtual_effort=None):
         # It needs params["target"]
         task_id = self.params["target"]
         msg = String()
         msg.data = task_id
-        self.publisher.publish(msg)
+        self.node._send_mission_signal(task_id)
+        # self.publisher.publish(msg)
         self.success = True
         self.finish_event.set()
         return virtual_state

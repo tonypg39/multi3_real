@@ -1,5 +1,11 @@
 import os
+import logging
 import rclpy
+import random
+from datetime import datetime
+from flask import Flask, request, jsonify
+import threading
+from sensor_msgs.msg import BatteryState
 from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
@@ -10,22 +16,24 @@ import requests
 import json
 import time
 from ament_index_python import get_package_prefix
-from multi3_interfaces.srv import Fragment
-COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
 
+
+COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
+ROBOT_NAME = os.getenv("ROBOT_NAME","robotx")
 
 class FragmentExecutor(Node):
     def __init__(self) -> None:
         super().__init__(f'fragment_exec_node')
         self.robot_name = "robot1"
         self.declare_parameter("skill_list", "-")
-        self.declare_parameter("name", "robot")
+        # self.declare_parameter("name", "robot")
         self.declare_parameter("mode", "virtual")
         self.declare_parameter("test_id", "")
         self.declare_parameter("sample_id", "")
         self.callback_group = ReentrantCallbackGroup()
         self.skill_list = self.get_parameter("skill_list").value
-        self.robot_name = self.get_parameter("name").value
+        # self.robot_name = self.get_parameter("name").value
+        self.robot_name = ROBOT_NAME
         test_id = self.get_parameter("test_id").value
         sample_id = self.get_parameter("sample_id").value[1:]
         self.virtual_mode = self.get_parameter("mode").value == "virtual"
@@ -46,7 +54,7 @@ class FragmentExecutor(Node):
             if test_id == "" or sample_id == "":
                 # self.get_logger().fatal("Test Id and Sample Id needed in Virtual mode")
                 # return
-                test_id = "test_2_2_t_agriculture"
+                test_id = "test_2_2_t_cleaning"
                 sample_id = 0
             self.env_states = self.read_env_states(test_id, int(sample_id))
         else:
@@ -55,20 +63,66 @@ class FragmentExecutor(Node):
 
         sk_mg = SkillManager(skill_mask=self.skill_list)
         self.sk_map = sk_mg.skill_map()
-        # print(self.sk_map)
-        # Create the service 
-        # self._start_srv()
         
-        # Create General communication channels 
-        # self.hearbeat_pub = self.create_publisher(String, "/hb_broadcast", 10)
-        # self.signal_subscription = self.create_subscription(String, '/signal_states', self.check_signals, 10)
+        # Battery recording 
+        
+        self.battery_history = []
+        if self.virtual_mode:
+            # VIRTUAL MODE
+            self.signal_pub_timer = self.create_timer(5.,self.virtual_battery_callback)
+        else:
+            self.subscription = self.create_subscription(
+                BatteryState,
+                '/battery_state',
+                self.battery_callback,
+                10
+            )
+
+        log = logging.getLogger('werkzeug')
+        log.setLevel(logging.ERROR)
+        self.app = Flask(__name__)
+        self.setup_routes()
+        threading.Thread(target=self.run_flask, daemon=True).start()
         self.signal_pub_timer = self.create_timer(self.settings['heartbeat_period'],self._send_heartbeat)
         self.busy = False
 
-    def check_signals(self, msg):
-        self.flags = json.loads(msg.data)
-        if "_SHUTDOWN_" in self.flags:
-            self.destroy_node()
+
+
+    def setup_routes(self):
+        # @self.app.route('/ping', methods=['GET'])
+        # def ping():
+        #     return jsonify({"status": "alive"})
+        @self.app.route('/get_battery_evolution', methods=['GET'])
+        def battery():
+            battery_evol = {
+                "robot_id" : self.robot_name,
+                "evolution": self.battery_history
+            }
+            return jsonify(battery_evol)
+
+        @self.app.route('/get_signal_states', methods=['POST'])
+        def receive_mission_signals():
+            data = request.get_json()
+            # self.get_logger().info(f"Received signals: {data}")
+            self.flags = data
+            if "_SHUTDOWN_" in self.flags:
+                self.destroy_node()
+            return jsonify({"status": "received"})
+
+        @self.app.route('/get_fragment', methods=['POST'])
+        def receive_data():
+            data = request.get_json()
+            self.get_logger().info(f"Received Fragment: {data}")
+            self.exec(data)
+            return jsonify({"status": "received"})
+        
+    def run_flask(self):
+        self.app.run(host="0.0.0.0", port=6000, debug=False, use_reloader=False)
+
+    # def check_signals(self, msg):
+    #     self.flags = json.loads(msg.data)
+    #     if "_SHUTDOWN_" in self.flags:
+    #         self.destroy_node()
 
     def read_env_states(self, test_id, sample_id):
         package_path = get_package_prefix("multi3_tests").replace("install","src")
@@ -77,40 +131,55 @@ class FragmentExecutor(Node):
             envs = json.load(f)
         env_states = envs[sample_id]
         return env_states
+    
+    
+    def _send_execution_response(self, response):
+        payload = {
+            "response": response
+        }
+        requests.post(f"{COORDINATOR_URL}/execution_response", json=payload)
 
+
+    def _send_mission_signal(self, mission_signal):
+        payload = {
+            "signal": mission_signal
+        }
+        requests.post(f"{COORDINATOR_URL}/mission_signal", json=payload)
 
     def _send_heartbeat(self):
         # m = String()
         state = "idle" if not self.busy else "busy " + self.info_task
         data = self.robot_name + "=" + state
-        # self.hearbeat_pub.publish(m)
         # self.get_logger().info(f"\n\n\nSending Heartbeat!! = Current Task: {self.info_task}"
         payload = {
                 "data": data
         }
-        requests.post(f"{COORDINATOR_URL}/data", json=payload)
-
-
-    def _start_srv(self):
-        # self.create_service()
-        # print("h1")
-        self.get_logger().info("Advertising the service...")
-        self.srv = self.create_service(Fragment, f'/{self.robot_name}/get_fragment', self.exec, callback_group=self.callback_group)
+        requests.post(f"{COORDINATOR_URL}/heartbeat", json=payload)
 
     
-    def _stop_srv(self):
-        self.srv.destroy()
-        self.srv = None
+    def battery_callback(self, msg):
+        battery_point = {
+            "voltage": msg.voltage,
+            "pct": msg.percentage,
+            "current_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        self.battery_history.append(battery_point)
+    
+    def virtual_battery_callback(self):
+        battery_point = {
+            "voltage": random.random() * 12,
+            "pct": random.random() * 100,
+            "current_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        self.battery_history.append(battery_point)
 
 
-    def exec(self, request, response):
+    def exec(self, fragment):
         # self._stop_srv()
         self.busy = True
         self._send_heartbeat()
         failure = False
-
-        # self.get_logger().info("Received fragment: " + request.fragment)
-        frag = json.loads(request.fragment)
+        frag = fragment
         for t in frag["tasks"]:
             self.info_task = t["id"]
             sep = t["id"].find("|")
@@ -139,9 +208,11 @@ class FragmentExecutor(Node):
             wait_for_skill.wait()
             failure |= sk.success
 
-        response.execution_code = 0 if not failure else 1
+        response = {"fragment_id" : frag["fragment_id"]}
+        response["execution_code"] = 0 if not failure else 1
         self.busy = False
         self.info_task = ""
+        self._send_execution_response(response)
         return response
     
     

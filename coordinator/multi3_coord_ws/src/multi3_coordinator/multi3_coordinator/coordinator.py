@@ -2,16 +2,34 @@
 # - Listen to /mission_comms and update the flag_table
 # assign the available fragment to idle robots
 import json
+import logging
+from datetime import datetime
+import os
+from flask import Flask, request, jsonify
+import threading
 import rclpy
+import requests
 from std_msgs.msg import String
 from rclpy.node import Node
 # from multi3_interfaces.srv import Fragment
 from ament_index_python import get_package_prefix
+
 import sys
+
+COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
+
+# executors = {
+#     "executor1": "http://executor1:6000",
+#     "executor2": "http://executor2:6000"
+# }
 
 class CoordinatorNode(Node):
     def __init__(self):
         super().__init__("multi3_coordinator")
+        self.executors = {
+            "robot_1": "http://executor1:6000",
+            "robot_2": "http://executor2:6000"
+        }
         self.coord_settings = {
             "signal_states_period": 1.0,
             "assignment_period": 1.5
@@ -27,26 +45,31 @@ class CoordinatorNode(Node):
 
         test_id = self.get_parameter("test_id").value
         mode = self.get_parameter("mode").value
+        
         self.get_logger().info("$$**MISSION_START**$$")
         self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {mode}")
         if test_id == "":
-            self.get_logger().fatal("No test_id specified!!")
-            return
+            test_id = "test_2_2_t_cleaning"
+            # self.get_logger().fatal("No test_id specified!!")
+            # return
         
-        if test_id == "":
-            self.get_logger().fatal("No mode specified!!")
-            return
+        if mode == "":
+            mode = "multi3"
+            # self.get_logger().fatal("No mode specified!!")
+            # return
     
+        self.test_id = test_id
+        self.mode = mode
         self.robot_inventory = self.read_inventory(test_id)
         fragments = self.read_fragments(test_id, mode)
 
-        self.create_subscription(String, "/mission_signals",self.update_signal_state,10)
-        self.create_subscription(String, "/hb_broadcast",self.update_hb,10)
+        # self.create_subscription(String, "/mission_signals",self.update_signal_state,10)
+        # self.create_subscription(String, "/hb_broadcast",self.update_hb,10)
         
         # FIXME: Replace:
         # - Sending without using self.signal_publisher
         # - Sending without 
-        self.signal_publisher = self.create_publisher(String, '/signal_states', 10)
+        # self.signal_publisher = self.create_publisher(String, '/signal_states', 10)
         self.signal_pub_timer = self.create_timer(self.coord_settings['signal_states_period'],self.broadcast_signal_states)
         self.assignment_timer = self.create_timer(self.coord_settings['assignment_period'],self.assign)
         self.fragments = self.load_fragments(fragments)
@@ -54,8 +77,66 @@ class CoordinatorNode(Node):
         # Dict to keep track of the states of executed fragments 
         # (For a frag to have a key here, the fragment must've been sent )
         self.fragments_futures = {} 
+        log = logging.getLogger('werkzeug')
+        log.setLevel(logging.ERROR)
+        self.app = Flask(__name__)
+        self.setup_routes()
+        threading.Thread(target=self.run_flask, daemon=True).start()
         
+    # Communication Methods
+    def send_signal_states(self, message_data):
+        # self.get_logger().info("Sending the signal states...")
+        for robot,url in self.executors.items():
+            try:
+                resp = requests.post(f"{url}/get_signal_states", json=self.signal_states)
+                results = resp.json()
+            except Exception as e:
+                results = {"error": str(e)}
+
+    
+    def send_fragment_to_robot(self, robot, fragment):
+        url = self.executors[robot]
+        # fragment = json.dumps(fragment)
+
+        try:
+            resp = requests.post(f"{url}/get_fragment", json=fragment)
+            results = resp.json()
+        except Exception as e:
+            results = {"error": str(e)}
+            self.get_logger().error(str(e))
+        # self.get_logger.info(results)
+    
+    def setup_routes(self):
+        # @self.app.route('/ping', methods=['GET'])
+        # def ping():
+        #     return jsonify({"status": "alive"})
+        @self.app.route('/mission_signal', methods=['POST'])
+        def receive_mission_signals():
+            data = request.get_json()
+            new_signal = data["signal"]
+            if new_signal not in self.signal_states:
+                self.signal_states.append(new_signal)
+            # self.get_logger().info(f"Received HTTP data: {data}")
+            return jsonify({"status": "received"})
+
+        @self.app.route('/heartbeat', methods=['POST'])
+        def heartbeat():
+            data = request.get_json()
+            # self.get_logger().info(f"Received HTTP data: {data}")
+            self.update_hb(data)
+            return jsonify({"status": "received"})
         
+        @self.app.route('/execution_response', methods=['POST'])
+        def execution_response():
+            data = request.get_json()["response"]
+            # self.get_logger().info(f"Received HTTP data: {data}")
+            self.fragments_futures[data["fragment_id"]] = data["execution_code"]
+            return jsonify({"status": "received"})
+
+
+    def run_flask(self):
+        self.app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
+    
 
     def read_fragments(self, test_id, mode):
         package_path = get_package_prefix("multi3_tests").replace("install","src")
@@ -88,7 +169,7 @@ class CoordinatorNode(Node):
         return F
 
     def update_hb(self, msg):
-        st = msg.data.split("=")
+        st = msg["data"].split("=")
         if not st[0] in self.robot_inventory:
             self.get_logger().warning(f"Ignoring robot '{st[0]}' as it is not in inventory")
             return 
@@ -101,15 +182,15 @@ class CoordinatorNode(Node):
         
 
 
-    def update_signal_state(self, msg):
-        new_signal = msg.data
-        if new_signal not in self.signal_states:
-            self.signal_states.append(new_signal)
+    # def update_signal_state(self, msg):
+    #     new_signal = msg.data
+    #     if new_signal not in self.signal_states:
+    #         self.signal_states.append(new_signal)
     
     
     # Publish the signal_states periodically using a Timer object
     def broadcast_signal_states(self):
-        message = String()
+        # message = String()
         signal_list = self.signal_states
         if self.shutdown_count > -1:
             if self.shutdown_count == 0:
@@ -122,9 +203,12 @@ class CoordinatorNode(Node):
                 sys.exit(0)
             signal_list.append("_SHUTDOWN_")
             self.shutdown_count -= 1
-        message.data = json.dumps(signal_list)
+
+
+        message_data = json.dumps(signal_list)
+        self.send_signal_states(message_data)
         # self.get_logger().info(f"Sending signals info: {message.data}")
-        self.signal_publisher.publish(message)
+        # self.signal_publisher.publish(message)
     
     def check_active_fragments(self):
         active_frags = []
@@ -202,13 +286,13 @@ class CoordinatorNode(Node):
                     active_frags.append(frag)
         return active_frags
     
-    def send_assignment(self, robot, fragment):
-        req = Fragment.Request()
-        req.fragment = json.dumps(fragment)
-        cli = self.create_client(Fragment, f'/{robot}/get_fragment')
-        while not cli.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('service not available, waiting again...')
-        self.fragments_futures[fragment["fragment_id"]] = cli.call_async(req)
+    # def send_assignment(self, robot, fragment):
+    #     req = Fragment.Request()
+    #     req.fragment = json.dumps(fragment)
+    #     cli = self.create_client(Fragment, f'/{robot}/get_fragment')
+    #     while not cli.wait_for_service(timeout_sec=1.0):
+    #         self.get_logger().info('service not available, waiting again...')
+    #     self.fragments_futures[fragment["fragment_id"]] = cli.call_async(req)
         
     def log_fragments(self, fragments, label):
         for f in fragments:
@@ -235,7 +319,7 @@ class CoordinatorNode(Node):
         for f_id,frag in self.fragments.items():
             executed = frag["status"] == "executed"
             finished = False
-            if executed and self.fragments_futures[f_id].done():
+            if executed and f_id in self.fragments_futures:
                 finished = True
             # self.get_logger().info(f"\n{f_id} -> executed = {str(executed)} | finished = {str(finished)}")
             if not executed or not finished:
@@ -243,6 +327,23 @@ class CoordinatorNode(Node):
                 return False
         return True
         
+    def collect_battery_info(self):
+        battery_evol = {}
+        for _, url in self.executors.items():
+            resp = requests.get(url + "/get_battery_evolution")
+            evolution = resp.json()
+            battery_evol[evolution["robot_id"]] = evolution
+        
+        package_path = get_package_prefix("multi3_tests").replace("install","src")
+        self.get_logger().info(f"The package path is: {package_path}")
+        path = f"{package_path}/multi3_tests/results/"
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{ts}_{self.test_id}_{self.mode}.json"
+        # Export the json to the path
+        with open(path + filename, "w") as f:
+            json.dump(battery_evol,f)
+            
+            
 
 
     def assign(self):
@@ -250,7 +351,8 @@ class CoordinatorNode(Node):
             return
         if self.check_finished():
             self.get_logger().info("$$*MISSION_COMPLETED*$$")
-            self.shutdown_count = 5
+            self.collect_battery_info()
+            self.shutdown_count = 8
             # self.destroy_node()
         self.get_logger().info("------Assignment window------")
         robots = self.get_idle_robots()
@@ -265,7 +367,7 @@ class CoordinatorNode(Node):
         
         for k,v in assignments.items():
             # print("Sending assignment: ", k,v)
-            self.send_assignment(k,v)
+            self.send_fragment_to_robot(k,v)
         # Increase the age of the unpicked fragments
         for f in fragments:
             if self.fragments[f["fragment_id"]]["status"] == "waiting":
