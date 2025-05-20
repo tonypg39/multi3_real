@@ -18,17 +18,13 @@ import sys
 
 COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
 
-# executors = {
-#     "executor1": "http://executor1:6000",
-#     "executor2": "http://executor2:6000"
-# }
 
 class CoordinatorNode(Node):
     def __init__(self):
         super().__init__("multi3_coordinator")
         self.executors = {
-            "robot_1": "http://executor1:6000",
-            "robot_2": "http://executor2:6000"
+            "robot_1": "http://localhost:6001",
+            "robot_2": "http://localhost:6002"
         }
         self.coord_settings = {
             "signal_states_period": 1.0,

@@ -20,6 +20,7 @@ from ament_index_python import get_package_prefix
 
 COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
 ROBOT_NAME = os.getenv("ROBOT_NAME","robotx")
+EXECUTOR_PORT = os.getenv("ROBOT_PORT","6000")
 
 class FragmentExecutor(Node):
     def __init__(self) -> None:
@@ -34,6 +35,7 @@ class FragmentExecutor(Node):
         self.skill_list = self.get_parameter("skill_list").value
         # self.robot_name = self.get_parameter("name").value
         self.robot_name = ROBOT_NAME
+        self.exec_port = EXECUTOR_PORT
         test_id = self.get_parameter("test_id").value
         sample_id = self.get_parameter("sample_id").value[1:]
         self.virtual_mode = self.get_parameter("mode").value == "virtual"
@@ -117,7 +119,7 @@ class FragmentExecutor(Node):
             return jsonify({"status": "received"})
         
     def run_flask(self):
-        self.app.run(host="0.0.0.0", port=6000, debug=False, use_reloader=False)
+        self.app.run(host="0.0.0.0", port=self.exec_port, debug=False, use_reloader=False)
 
     # def check_signals(self, msg):
     #     self.flags = json.loads(msg.data)
