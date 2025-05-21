@@ -1,26 +1,22 @@
-version: "3.8"
-
 services:
   coordinator:
     build: ./coordinator
     volumes:
       - ./output:/multi3_coord_ws/src/multi3_tests/multi3_tests/results
     container_name: coordinator
-    # ports:
-    #   - "5000:5000"
     network_mode: host  # optional: required for some ROS GUI tools like RViz to find ROS master
 
   executor1:
     build: ./executor
     container_name: executor1
     environment:
-      # - DISPLAY=${DISPLAY}
+      - DISPLAY=${DISPLAY}
       - ROBOT_PORT=6001
       - EXECUTOR_ID=executor1
       - ROBOT_NAME=robot_1
-      - TB_ID=Turtlebot_02489
+      - TB_ID=Turtlebot_02492
       - ROS_ENV=ros_humble
-      - ROS_DOMAIN=0
+      - ROS_DOMAIN_ID=0
       - COORDINATOR_URL=http://localhost:5000
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
@@ -33,13 +29,13 @@ services:
     build: ./executor
     container_name: executor2
     environment:
-      # - DISPLAY=${DISPLAY}
+      - DISPLAY=${DISPLAY}
       - ROBOT_PORT=6002
       - EXECUTOR_ID=executor2
       - ROBOT_NAME=robot_2
-      - TB_ID=Turtlebot_02490
+      - TB_ID=Turtlebot_02492
       - ROS_ENV=ros_humble
-      - ROS_DOMAIN=1
+      - ROS_DOMAIN_ID=1
       - COORDINATOR_URL=http://localhost:5000
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix

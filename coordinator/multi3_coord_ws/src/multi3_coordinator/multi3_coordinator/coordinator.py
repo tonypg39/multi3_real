@@ -11,12 +11,13 @@ import rclpy
 import requests
 from std_msgs.msg import String
 from rclpy.node import Node
+import time
 # from multi3_interfaces.srv import Fragment
 from ament_index_python import get_package_prefix
 
 import sys
 
-COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
+COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://localhost:5000")
 
 
 class CoordinatorNode(Node):
@@ -35,6 +36,9 @@ class CoordinatorNode(Node):
         self.robot_states = {}
         self.signal_states = ['SYSTEM_START']
         
+        self.wait_for_start_trigger()
+
+
         # Declare Parameters
         self.declare_parameter("test_id", "")
         self.declare_parameter("mode", "")
@@ -59,13 +63,8 @@ class CoordinatorNode(Node):
         self.robot_inventory = self.read_inventory(test_id)
         fragments = self.read_fragments(test_id, mode)
 
-        # self.create_subscription(String, "/mission_signals",self.update_signal_state,10)
-        # self.create_subscription(String, "/hb_broadcast",self.update_hb,10)
         
-        # FIXME: Replace:
-        # - Sending without using self.signal_publisher
-        # - Sending without 
-        # self.signal_publisher = self.create_publisher(String, '/signal_states', 10)
+        
         self.signal_pub_timer = self.create_timer(self.coord_settings['signal_states_period'],self.broadcast_signal_states)
         self.assignment_timer = self.create_timer(self.coord_settings['assignment_period'],self.assign)
         self.fragments = self.load_fragments(fragments)
@@ -78,7 +77,16 @@ class CoordinatorNode(Node):
         self.app = Flask(__name__)
         self.setup_routes()
         threading.Thread(target=self.run_flask, daemon=True).start()
+    
+    def wait_for_start_trigger(self):
+        flag_path = "/tmp/start.flag"
+        self.get_logger().info("Waiting for the trigger...")
+        rate = self.create_rate(1)
+        while os.path.exists(flag_path) and False:
+            rate.sleep()
         
+        self.get_logger().info("Trigger Flag detected")
+    
     # Communication Methods
     def send_signal_states(self, message_data):
         # self.get_logger().info("Sending the signal states...")

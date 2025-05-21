@@ -31,6 +31,9 @@ class FragmentExecutor(Node):
         self.declare_parameter("mode", "virtual")
         self.declare_parameter("test_id", "")
         self.declare_parameter("sample_id", "")
+
+        self.wait_for_start_trigger()
+
         self.callback_group = ReentrantCallbackGroup()
         self.skill_list = self.get_parameter("skill_list").value
         # self.robot_name = self.get_parameter("name").value
@@ -88,6 +91,14 @@ class FragmentExecutor(Node):
         self.signal_pub_timer = self.create_timer(self.settings['heartbeat_period'],self._send_heartbeat)
         self.busy = False
 
+    def wait_for_start_trigger(self):
+        flag_path = "/tmp/start.flag"
+        self.get_logger().info("Waiting for the trigger...")
+        rate = self.create_rate(1)
+        while not os.path.exists(flag_path):
+            rate.sleep()
+        
+        self.get_logger().info("Trigger Flag detected")
 
 
     def setup_routes(self):
