@@ -25,7 +25,7 @@ class CoordinatorNode(Node):
         super().__init__("multi3_coordinator")
         self.executors = {
             "robot_1": "http://localhost:6001",
-            "robot_2": "http://localhost:6002"
+            # "robot_2": "http://localhost:6002"
         }
         self.coord_settings = {
             "signal_states_period": 1.0,

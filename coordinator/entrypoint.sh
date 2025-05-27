@@ -1,4 +1,5 @@
 #!/bin/bash
+sleep 100
 source /opt/ros/humble/setup.bash
 cd /multi3_coord_ws
 colcon build

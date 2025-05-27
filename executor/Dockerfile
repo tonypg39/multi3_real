@@ -25,7 +25,7 @@ RUN pip3 install requests flask
 # Copy the combined navigation script
 COPY setup/bringup_nav.launch.py /opt/ros/humble/share/turtlebot4_navigation/launch
 
-COPY setup/navigation /opt/ros/humble/share/turtlebot4_navigation/
+COPY setup/navigation .
 
 # Source ROS and build the workspace
 RUN . /opt/ros/humble/setup.sh && \
