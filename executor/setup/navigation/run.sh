@@ -1,0 +1,2 @@
+ros2 launch turtlebot4_navigation localization.launch.py namespace:=/Turtlebot_02493  map:=/home/ubuntu/navigation/lab_corridor.yaml
+ros2 launch turtlebot4_navigation nav2.launch.py namespace:=/Turtlebot_02493
