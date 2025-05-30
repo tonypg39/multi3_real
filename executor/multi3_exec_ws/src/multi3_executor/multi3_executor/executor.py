@@ -64,6 +64,9 @@ class FragmentExecutor(Node):
             self.env_states = self.read_env_states(test_id, int(sample_id))
         else:
             self.virtual_state = None
+            self.initial_position = self.read_initial_position(test_id)
+            self.start_reset_srv()
+            self.reset_odometry(self.initial_position)
         
 
         sk_mg = SkillManager(skill_mask=self.skill_list)
@@ -90,6 +93,14 @@ class FragmentExecutor(Node):
         threading.Thread(target=self.run_flask, daemon=True).start()
         self.signal_pub_timer = self.create_timer(self.settings['heartbeat_period'],self._send_heartbeat)
         self.busy = False
+    
+    def read_initial_position(self, test_id):
+        package_path = get_package_prefix("multi3_tests").replace("install","src")
+        # print(package_path)
+        with open(f"{package_path}/multi3_tests/tests/{test_id}/initial_positions.json") as f:
+            positions = json.load(f)
+        initial_pos = positions[self.robot_name]
+        return initial_pos
 
     def wait_for_start_trigger(self):
         flag_path = "/tmp/start.flag"
