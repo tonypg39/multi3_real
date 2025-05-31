@@ -3,11 +3,7 @@ FROM ros:humble
 # Environment
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Create workspace
-WORKDIR /multi3_coord_ws
 
-# Copy the ROS2 workspace into the container
-COPY multi3_coord_ws/src ./src
 
 # Install ROS 2 dependencies
 RUN apt-get update && apt-get install -y \
@@ -18,6 +14,12 @@ RUN apt-get update && apt-get install -y \
 
 # Install Python packages if needed
 RUN pip3 install requests flask
+
+# Create workspace
+WORKDIR /multi3_coord_ws
+
+# Copy the ROS2 workspace into the container
+COPY multi3_coord_ws/src ./src
 
 # Source ROS and build the workspace
 RUN . /opt/ros/humble/setup.sh && \

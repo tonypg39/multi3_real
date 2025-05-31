@@ -13,8 +13,6 @@ echo "Starting the navigation stack..."
 # exec ros2 launch turtlebot4_viz view_robot.launch.py namespace:=/$TB_ID &
 
 echo $TB_ID
-sleep infinity # wait for the Navigation stack to load up
+# sleep infinity # wait for the Navigation stack to load up
 
-
-# rviz2 &
-# exec ros2 run multi3_executor executor
+exec ros2 run multi3_executor executor

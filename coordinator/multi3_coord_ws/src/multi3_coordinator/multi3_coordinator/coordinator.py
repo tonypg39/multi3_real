@@ -11,6 +11,7 @@ import rclpy
 import requests
 from std_msgs.msg import String
 from rclpy.node import Node
+from concurrent.futures import ThreadPoolExecutor
 import time
 # from multi3_interfaces.srv import Fragment
 from ament_index_python import get_package_prefix
@@ -25,7 +26,7 @@ class CoordinatorNode(Node):
         super().__init__("multi3_coordinator")
         self.executors = {
             "robot_1": "http://localhost:6001",
-            # "robot_2": "http://localhost:6002"
+            "robot_2": "http://localhost:6002"
         }
         self.coord_settings = {
             "signal_states_period": 1.0,
@@ -36,7 +37,7 @@ class CoordinatorNode(Node):
         self.robot_states = {}
         self.signal_states = ['SYSTEM_START']
         
-        self.wait_for_start_trigger()
+        # self.wait_for_start_trigger()
 
 
         # Declare Parameters
@@ -49,7 +50,7 @@ class CoordinatorNode(Node):
         self.get_logger().info("$$**MISSION_START**$$")
         self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {mode}")
         if test_id == "":
-            test_id = "test_2_2_t_cleaning"
+            test_id = "test_2_2_cleaning_bare"
             # self.get_logger().fatal("No test_id specified!!")
             # return
         
@@ -99,6 +100,7 @@ class CoordinatorNode(Node):
 
     
     def send_fragment_to_robot(self, robot, fragment):
+        self.get_logger().info(f"Sending Fragment to Robot {robot}")
         url = self.executors[robot]
         # fragment = json.dumps(fragment)
 
@@ -290,13 +292,6 @@ class CoordinatorNode(Node):
                     active_frags.append(frag)
         return active_frags
     
-    # def send_assignment(self, robot, fragment):
-    #     req = Fragment.Request()
-    #     req.fragment = json.dumps(fragment)
-    #     cli = self.create_client(Fragment, f'/{robot}/get_fragment')
-    #     while not cli.wait_for_service(timeout_sec=1.0):
-    #         self.get_logger().info('service not available, waiting again...')
-    #     self.fragments_futures[fragment["fragment_id"]] = cli.call_async(req)
         
     def log_fragments(self, fragments, label):
         for f in fragments:
@@ -367,11 +362,15 @@ class CoordinatorNode(Node):
         self.log_robots()
         # self.get_logger().info(f"The active robots are: {robots}")
         assignments = self.generate_assigments(robots, fragments)
-        # print(assignments)
-        
-        for k,v in assignments.items():
-            # print("Sending assignment: ", k,v)
-            self.send_fragment_to_robot(k,v)
+        # self.get_logger().info(f"Assigments: {assignments}")
+
+
+        if len(assignments) > 0:
+            with ThreadPoolExecutor(max_workers=len(assignments)) as executor:
+                futures = []
+                for robot, fragment in assignments.items():
+                    futures.append(executor.submit(self.send_fragment_to_robot,robot, fragment))
+            
         # Increase the age of the unpicked fragments
         for f in fragments:
             if self.fragments[f["fragment_id"]]["status"] == "waiting":

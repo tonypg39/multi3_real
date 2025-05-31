@@ -21,6 +21,8 @@ from ament_index_python import get_package_prefix
 COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
 ROBOT_NAME = os.getenv("ROBOT_NAME","robotx")
 EXECUTOR_PORT = os.getenv("ROBOT_PORT","6000")
+TB_ID = os.getenv("TB_ID","")
+
 
 class FragmentExecutor(Node):
     def __init__(self) -> None:
@@ -28,11 +30,11 @@ class FragmentExecutor(Node):
         self.robot_name = "robot1"
         self.declare_parameter("skill_list", "-")
         # self.declare_parameter("name", "robot")
-        self.declare_parameter("mode", "virtual")
+        self.declare_parameter("mode", "real")
         self.declare_parameter("test_id", "")
         self.declare_parameter("sample_id", "")
 
-        self.wait_for_start_trigger()
+        # self.wait_for_start_trigger()
 
         self.callback_group = ReentrantCallbackGroup()
         self.skill_list = self.get_parameter("skill_list").value
@@ -50,26 +52,29 @@ class FragmentExecutor(Node):
             "heartbeat_period": 3.0
         }
         self.info_task = ""
+        if test_id == "" or sample_id == "":
+            # self.get_logger().fatal("Test Id and Sample Id needed in Virtual mode")
+            # return
+            test_id = "test_2_2_cleaning_bare"
+            sample_id = 0
         if self.virtual_mode:
             self.virtual_state = {
                 "x": .0,
                 "y": .0,
                 "z": .0
             }
-            if test_id == "" or sample_id == "":
-                # self.get_logger().fatal("Test Id and Sample Id needed in Virtual mode")
-                # return
-                test_id = "test_2_2_t_cleaning"
-                sample_id = 0
+            
             self.env_states = self.read_env_states(test_id, int(sample_id))
         else:
             self.virtual_state = None
-            self.initial_position = self.read_initial_position(test_id)
-            self.start_reset_srv()
-            self.reset_odometry(self.initial_position)
+            # FIXME: Add reset_pose to better use the initial position
+            # self.initial_position = self.read_initial_position(test_id)
+            # self.start_reset_srv()
+            # self.reset_odometry(self.initial_position)
+            self.real_robot_namespace = TB_ID
         
 
-        sk_mg = SkillManager(skill_mask=self.skill_list)
+        sk_mg = SkillManager(skill_mask=self.skill_list, virtual_mode=self.virtual_mode)
         self.sk_map = sk_mg.skill_map()
         
         # Battery recording 
@@ -94,13 +99,6 @@ class FragmentExecutor(Node):
         self.signal_pub_timer = self.create_timer(self.settings['heartbeat_period'],self._send_heartbeat)
         self.busy = False
     
-    def read_initial_position(self, test_id):
-        package_path = get_package_prefix("multi3_tests").replace("install","src")
-        # print(package_path)
-        with open(f"{package_path}/multi3_tests/tests/{test_id}/initial_positions.json") as f:
-            positions = json.load(f)
-        initial_pos = positions[self.robot_name]
-        return initial_pos
 
     def wait_for_start_trigger(self):
         flag_path = "/tmp/start.flag"
@@ -137,8 +135,8 @@ class FragmentExecutor(Node):
         def receive_data():
             data = request.get_json()
             self.get_logger().info(f"Received Fragment: {data}")
-            self.exec(data)
-            return jsonify({"status": "received"})
+            response = self.exec(data)
+            return jsonify({"status": response})
         
     def run_flask(self):
         self.app.run(host="0.0.0.0", port=self.exec_port, debug=False, use_reloader=False)

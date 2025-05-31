@@ -8,8 +8,8 @@
 * Manual run of the commands
 ```
 ros2 launch turtlebot4_navigation localization.launch.py map:=/home/gssi-lab/multi3_repos/multi3_real/executor/setup/navigation/lab_empty.yaml namespace:=/Turtlebot_02490
-ros2 launch turtlebot4_navigation nav2.launch.py namespace:=/Turtlebot_02493
-ros2 launch turtlebot4_viz view_robot.launch.py namespace:=/Turtlebot_02493
+ros2 launch turtlebot4_navigation nav2.launch.py namespace:=/Turtlebot_02490
+ros2 launch turtlebot4_viz view_robot.launch.py namespace:=/Turtlebot_02490
 ```
 
 
