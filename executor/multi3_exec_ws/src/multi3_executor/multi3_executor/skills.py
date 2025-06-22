@@ -119,6 +119,7 @@ class NativeNavigator():
         self.spin_goal = spin_goal # sg = {"spin_speed": 1.5, "time_steps"}
 
     def odom_callback(self, msg):
+        # self.node.get_logger().info(f"Updating pose...")
         self.current_pose = msg.pose.pose
     
     def get_yaw_from_quaternion(self, q):
@@ -157,7 +158,7 @@ class NativeNavigator():
         if self.goal_pose is None or self.current_pose is None:
             return
         
-        self.node.get_logger().info("Control Step2!")
+        # self.node.get_logger().info("Control Step2!")
         
         yaw = self.get_yaw_from_quaternion(self.current_pose.orientation)
         x,y = self.current_pose.position.x,self.current_pose.position.y

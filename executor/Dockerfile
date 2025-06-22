@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     build-essential \
     ros-humble-nav2-msgs \ 
+    ros-humble-tf-transformations \
+    ros-humble-irobot-create-msgs \
     # ros-humble-rviz2 \
     # ros-humble-turtlebot4-navigation \
     # ros-humble-turtlebot4-viz \

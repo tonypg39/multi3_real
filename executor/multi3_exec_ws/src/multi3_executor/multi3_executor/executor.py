@@ -7,8 +7,12 @@ from flask import Flask, request, jsonify
 import threading
 from sensor_msgs.msg import BatteryState
 from rclpy.node import Node
+from tf_transformations import quaternion_from_euler
+from geometry_msgs.msg import Pose
+from irobot_create_msgs.srv import ResetPose
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
+from rclpy.qos import QoSProfile, HistoryPolicy, ReliabilityPolicy, DurabilityPolicy
 from std_msgs.msg import String
 from .skills import SkillManager
 from threading import Event
@@ -52,10 +56,12 @@ class FragmentExecutor(Node):
             "heartbeat_period": 3.0
         }
         self.info_task = ""
+        self.battery_history = []
+
         if test_id == "" or sample_id == "":
             # self.get_logger().fatal("Test Id and Sample Id needed in Virtual mode")
             # return
-            test_id = "test_2_2_cleaning_bare"
+            test_id = "test_1_2_cleaning_bare"
             sample_id = 0
         if self.virtual_mode:
             self.virtual_state = {
@@ -63,33 +69,32 @@ class FragmentExecutor(Node):
                 "y": .0,
                 "z": .0
             }
-            
+            self.signal_pub_timer = self.create_timer(5.,self.virtual_battery_callback)
             self.env_states = self.read_env_states(test_id, int(sample_id))
         else:
             self.virtual_state = None
-            # FIXME: Add reset_pose to better use the initial position
-            # self.initial_position = self.read_initial_position(test_id)
-            # self.start_reset_srv()
-            # self.reset_odometry(self.initial_position)
             self.real_robot_namespace = TB_ID
-        
+            self.initial_position = self.read_initial_position(test_id)
+            self.start_reset_srv()
+            self.reset_odometry(self.initial_position)
+            
+
+            # Battery recording
+            self.get_logger().info("Starting battery subscription...")
+            qos = QoSProfile(
+                reliability=ReliabilityPolicy.BEST_EFFORT,
+                durability=DurabilityPolicy.VOLATILE,
+                depth=10
+            )
+            self.subscription = self.create_subscription(
+                BatteryState,
+                f'/{self.real_robot_namespace}/battery_state',
+                self.battery_callback,
+                qos
+            )
 
         sk_mg = SkillManager(skill_mask=self.skill_list, virtual_mode=self.virtual_mode)
         self.sk_map = sk_mg.skill_map()
-        
-        # Battery recording 
-        
-        self.battery_history = []
-        if self.virtual_mode:
-            # VIRTUAL MODE
-            self.signal_pub_timer = self.create_timer(5.,self.virtual_battery_callback)
-        else:
-            self.subscription = self.create_subscription(
-                BatteryState,
-                '/battery_state',
-                self.battery_callback,
-                10
-            )
 
         log = logging.getLogger('werkzeug')
         log.setLevel(logging.ERROR)
@@ -98,6 +103,49 @@ class FragmentExecutor(Node):
         threading.Thread(target=self.run_flask, daemon=True).start()
         self.signal_pub_timer = self.create_timer(self.settings['heartbeat_period'],self._send_heartbeat)
         self.busy = False
+    
+    def read_initial_position(self, test_id):
+        package_path = get_package_prefix("multi3_tests").replace("install","src")
+        # print(package_path)
+        with open(f"{package_path}/multi3_tests/tests/{test_id}/initial_positions.json") as f:
+            positions = json.load(f)
+        initial_pos = positions[self.robot_name]
+        return initial_pos
+    
+    def start_reset_srv(self):
+        qos_profile = QoSProfile(
+            depth=10,  # increase depth to allow larger history buffer
+            history=HistoryPolicy.KEEP_LAST
+        )
+        service_name = f'/{self.real_robot_namespace}/reset_pose'
+        self.reset_pose_client = self.create_client(ResetPose, service_name, qos_profile=qos_profile)
+
+        #Debugging service discovery
+        # self.list_services()
+        services = self.get_service_names_and_types()
+        self.get_logger().info(f'Waiting for service {service_name}...')
+        while not self.reset_pose_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info(f'Service {service_name} not available, waiting...')
+
+    def reset_odometry(self, initial_position):
+        request = ResetPose.Request()
+        quat = quaternion_from_euler(0.0, 0.0, initial_position["yaw"])
+        initial_pose = Pose()
+        initial_pose.position.x = initial_position["x"]
+        initial_pose.position.y = initial_position["y"]
+        initial_pose.position.z = 0.0
+        initial_pose.orientation.x = quat[0]
+        initial_pose.orientation.y = quat[1]
+        initial_pose.orientation.z = quat[2]
+        initial_pose.orientation.w = quat[3]
+        request.pose = initial_pose
+
+        self.get_logger().info(f'Calling {self.real_robot_namespace}/reset_pose with initial pose...')
+
+        future = self.reset_pose_client.call_async(request)
+
+        # Spin until the future is done
+        time.sleep(2)
     
 
     def wait_for_start_trigger(self):
@@ -185,6 +233,7 @@ class FragmentExecutor(Node):
             "pct": msg.percentage,
             "current_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
+        self.get_logger().info(f"Battery recorded: {battery_point}")
         self.battery_history.append(battery_point)
     
     def virtual_battery_callback(self):
