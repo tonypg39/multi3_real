@@ -26,6 +26,7 @@ COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://coordinator:5000")
 ROBOT_NAME = os.getenv("ROBOT_NAME","robotx")
 EXECUTOR_PORT = os.getenv("ROBOT_PORT","6000")
 TB_ID = os.getenv("TB_ID","")
+TEST_ID = os.getenv("TEST_ID","")
 
 
 class FragmentExecutor(Node):
@@ -61,7 +62,9 @@ class FragmentExecutor(Node):
         if test_id == "" or sample_id == "":
             # self.get_logger().fatal("Test Id and Sample Id needed in Virtual mode")
             # return
-            test_id = "test_1_2_cleaning_bare"
+            if TEST_ID == "":
+                raise ValueError("Test ID was not received in the Coordinator Node")
+            test_id = TEST_ID
             sample_id = 0
         if self.virtual_mode:
             self.virtual_state = {

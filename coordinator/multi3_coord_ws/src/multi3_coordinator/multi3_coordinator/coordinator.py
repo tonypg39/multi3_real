@@ -19,7 +19,7 @@ from ament_index_python import get_package_prefix
 import sys
 
 COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://localhost:5000")
-
+TEST_ID = os.getenv("TEST_ID", "")
 
 class CoordinatorNode(Node):
     def __init__(self):
@@ -50,7 +50,9 @@ class CoordinatorNode(Node):
         self.get_logger().info("$$**MISSION_START**$$")
         self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {mode}")
         if test_id == "":
-            test_id = "test_2_2_cleaning_bare"
+            if TEST_ID == "":
+                raise ValueError("Test ID was not received in the Coordinator Node")
+            test_id = TEST_ID
             # self.get_logger().fatal("No test_id specified!!")
             # return
         

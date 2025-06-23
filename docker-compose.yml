@@ -3,6 +3,7 @@ services:
     build: ./coordinator
     environment:
       - ROS_DOMAIN_ID=55
+      - TEST_ID=test_2_2_t_cleaning
     volumes:
       - ./output:/multi3_coord_ws/src/multi3_tests/multi3_tests/results
     container_name: coordinator
@@ -20,6 +21,7 @@ services:
       - ROS_ENV=ros_humble
       - ROS_DOMAIN_ID=1
       - COORDINATOR_URL=http://localhost:5000
+      - TEST_ID=test_2_2_t_cleaning
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
     depends_on:
@@ -39,6 +41,7 @@ services:
   #     - ROS_ENV=ros_humble
   #     - ROS_DOMAIN_ID=0
   #     - COORDINATOR_URL=http://localhost:5000
+  #     - TEST_ID=test_2_2_t_cleaning
   #   volumes:
   #     - /tmp/.X11-unix:/tmp/.X11-unix
   #   depends_on:
@@ -57,6 +60,7 @@ services:
   #     - ROS_ENV=ros_humble
   #     - ROS_DOMAIN_ID=2
   #     - COORDINATOR_URL=http://localhost:5000
+  #     - TEST_ID=test_2_2_t_cleaning
   #   volumes:
   #     - /tmp/.X11-unix:/tmp/.X11-unix
   #   depends_on:
