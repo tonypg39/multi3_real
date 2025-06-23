@@ -159,9 +159,6 @@ class FragmentExecutor(Node):
 
 
     def setup_routes(self):
-        # @self.app.route('/ping', methods=['GET'])
-        # def ping():
-        #     return jsonify({"status": "alive"})
         @self.app.route('/get_battery_evolution', methods=['GET'])
         def battery():
             battery_evol = {
@@ -189,10 +186,6 @@ class FragmentExecutor(Node):
     def run_flask(self):
         self.app.run(host="0.0.0.0", port=self.exec_port, debug=False, use_reloader=False)
 
-    # def check_signals(self, msg):
-    #     self.flags = json.loads(msg.data)
-    #     if "_SHUTDOWN_" in self.flags:
-    #         self.destroy_node()
 
     def read_env_states(self, test_id, sample_id):
         package_path = get_package_prefix("multi3_tests").replace("install","src")
@@ -294,7 +287,6 @@ def main(args=None):
     mt_executor = MultiThreadedExecutor()
     mt_executor.add_node(bot_exec)
     mt_executor.spin()
-    # rclpy.spin(bot_exec)
     bot_exec.destroy_node()
     rclpy.shutdown()
 
