@@ -15,18 +15,19 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 # from multi3_interfaces.srv import Fragment
 from ament_index_python import get_package_prefix
-
 import sys
 
 COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://localhost:5000")
 TEST_ID = os.getenv("TEST_ID", "")
+MODE = os.getenv("MODE", "")
 
 class CoordinatorNode(Node):
     def __init__(self):
         super().__init__("multi3_coordinator")
-        self.executors = {
+        executors = {
             "robot_1": "http://localhost:6001",
-            # "robot_2": "http://localhost:6002"
+            "robot_2": "http://localhost:6002",
+            "robot_3": "http://localhost:6003",
         }
         self.coord_settings = {
             "signal_states_period": 1.0,
@@ -39,7 +40,6 @@ class CoordinatorNode(Node):
         
         # self.wait_for_start_trigger()
 
-
         # Declare Parameters
         self.declare_parameter("test_id", "")
         self.declare_parameter("mode", "")
@@ -47,8 +47,7 @@ class CoordinatorNode(Node):
         test_id = self.get_parameter("test_id").value
         mode = self.get_parameter("mode").value
         
-        self.get_logger().info("$$**MISSION_START**$$")
-        self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {mode}")
+        
         if test_id == "":
             if TEST_ID == "":
                 raise ValueError("Test ID was not received in the Coordinator Node")
@@ -57,20 +56,22 @@ class CoordinatorNode(Node):
             # return
         
         if mode == "":
-            mode = "multi3"
-            # self.get_logger().fatal("No mode specified!!")
-            # return
-    
+            if TEST_ID == "":
+                raise ValueError("MODE (multi3 |bl_0 |...) was not received in the Coordinator Node")
+            mode = MODE
+        
+        self.get_logger().info("$$**MISSION_START**$$")
+        self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {mode}")
         self.test_id = test_id
         self.mode = mode
+        self.executors = self.get_active_executors(executors)
         self.robot_inventory = self.read_inventory(test_id)
         fragments = self.read_fragments(test_id, mode)
-
-        
         
         self.signal_pub_timer = self.create_timer(self.coord_settings['signal_states_period'],self.broadcast_signal_states)
         self.assignment_timer = self.create_timer(self.coord_settings['assignment_period'],self.assign)
         self.fragments = self.load_fragments(fragments)
+        self.executor_pool = ThreadPoolExecutor(max_workers=8)
         # self.get_logger().info(f"The loaded fragments: {self.fragments}")
         # Dict to keep track of the states of executed fragments 
         # (For a frag to have a key here, the fragment must've been sent )
@@ -81,6 +82,15 @@ class CoordinatorNode(Node):
         self.setup_routes()
         threading.Thread(target=self.run_flask, daemon=True).start()
     
+    def get_active_executors(self, execs):
+        robot_count = int(self.test_id.split("_")[1])
+        d = list(execs.items())
+        active_execs = {}
+        for i in range(robot_count):
+            active_execs[d[i][0]] = d[i][1]
+        return active_execs 
+
+
     def wait_for_start_trigger(self):
         flag_path = "/tmp/start.flag"
         self.get_logger().info("Waiting for the trigger...")
@@ -115,9 +125,6 @@ class CoordinatorNode(Node):
         # self.get_logger.info(results)
     
     def setup_routes(self):
-        # @self.app.route('/ping', methods=['GET'])
-        # def ping():
-        #     return jsonify({"status": "alive"})
         @self.app.route('/mission_signal', methods=['POST'])
         def receive_mission_signals():
             data = request.get_json()
@@ -256,7 +263,6 @@ class CoordinatorNode(Node):
         used_robots = set()
         for f in sorted_frags:
             # self.get_logger().warning(f"Inside sorted frags {robots}")
-
             if "robot" in f.keys():
                 # STATIC ASSIGNMENT, we expect the keyword robot associated with each fragment
                 # The fragments are a construct with all of the tasks assigned to a specific robot
@@ -287,9 +293,11 @@ class CoordinatorNode(Node):
     def get_active_fragments(self):
         active_frags = []
         for frag in self.fragments.values():
+            
             if frag["status"] == "waiting":
                 w_flags = frag['initial_wait'].split('&')
                 missing_signal = any(fl not in self.signal_states for fl in w_flags)
+                # self.get_logger().info(f"The fragment {frag['fragment_id']} has the missing {missing_signal}")
                 if not missing_signal:
                     active_frags.append(frag)
         return active_frags
@@ -368,10 +376,13 @@ class CoordinatorNode(Node):
 
 
         if len(assignments) > 0:
-            with ThreadPoolExecutor(max_workers=len(assignments)) as executor:
-                futures = []
-                for robot, fragment in assignments.items():
-                    futures.append(executor.submit(self.send_fragment_to_robot,robot, fragment))
+            for robot, fragment in assignments.items():
+                self.executor_pool.submit(self.send_fragment_to_robot,robot, fragment)
+            
+            # with ThreadPoolExecutor(max_workers=len(assignments)) as executor:
+            #     futures = []
+            #     for robot, fragment in assignments.items():
+            #         futures.append(executor.submit(self.send_fragment_to_robot,robot, fragment))
             
         # Increase the age of the unpicked fragments
         for f in fragments:

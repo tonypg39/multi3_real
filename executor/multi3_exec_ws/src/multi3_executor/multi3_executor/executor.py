@@ -229,7 +229,7 @@ class FragmentExecutor(Node):
             "pct": msg.percentage,
             "current_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
-        self.get_logger().info(f"Battery recorded: {battery_point}")
+        # self.get_logger().info(f"Battery recorded: {battery_point}")
         self.battery_history.append(battery_point)
     
     def virtual_battery_callback(self):

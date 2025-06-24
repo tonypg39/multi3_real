@@ -140,7 +140,7 @@ class NativeNavigator():
         return new_angle
 
     def control_loop(self):
-        self.node.get_logger().info(f"Control Step! Goal Pose: {self.goal_pose} || Cur Pose: {self.current_pose}")
+        # self.node.get_logger().info(f"Control Step! Goal Pose: {self.goal_pose} || Cur Pose: {self.current_pose}")
         
         if self.spin_goal is not None:
             vel_msg = Twist()
@@ -178,8 +178,8 @@ class NativeNavigator():
         k_angular = self.control_params['k_angular']
         desired_angle_goal = self.wrap_angle(self.p_ang, math.atan2(self.goal_pose["y"]-y,self.goal_pose["x"]-x))
         self.p_ang = desired_angle_goal
-        pos_msg = f"The current angle: {math.degrees(yaw)}  | Desired: {math.degrees(desired_angle_goal)} | Da: {math.degrees(desired_angle_goal-yaw)}"
-        self.node.get_logger().info(pos_msg)
+        # pos_msg = f"The current angle: {math.degrees(yaw)}  | Desired: {math.degrees(desired_angle_goal)} | Da: {math.degrees(desired_angle_goal-yaw)}"
+        # self.node.get_logger().info(pos_msg)
         angular_speed = (desired_angle_goal-yaw)*k_angular
 
         vel_msg = Twist()
@@ -220,7 +220,10 @@ class NativeNavigator():
         yaw = np.arctan2(siny_cosp, cosy_cosp)
 
         return roll, pitch, yaw
-    
+
+    def stop_navigator(self):
+        self.timer.cancel()
+
 
 
 # Skills
@@ -262,14 +265,13 @@ class SendSkill():
         self.finish_event = finish_event
         self.params = params
         self.success = False
-        self.publisher = self.node.create_publisher(String, "/mission_signals",10)
     
     def exec(self, virtual_state,virtual_effort=None):
         # It needs params["target"]
         task_id = self.params["target"]
         msg = String()
         msg.data = task_id
-        self.publisher.publish(msg)
+        self.node._send_mission_signal(task_id)
         self.success = True
         self.finish_event.set()
         return virtual_state
@@ -298,7 +300,7 @@ class MopSkill():
         }
         spin_goal = {
             "angular_speed": 0.3,
-            "time_steps": 250
+            "time_steps": 60
         }
         self.nav.set_goal_pose(goal_pos)
         self.wait_for_nav.wait()
@@ -334,13 +336,15 @@ class VacuumSkill():
         }
         spin_goal = {
             "angular_speed": 0.8,
-            "time_steps": 100
+            "time_steps": 60
         }
         self.nav.set_goal_pose(goal_pos)
         self.wait_for_nav.wait()
         self.nav.set_spin_goal(spin_goal)
         self.wait_for_mock_skill.wait()
+        self.nav.stop_navigator()
         self.success = True
+
         self.finished_event.set()
         self.node.get_logger().info(f"Finishing up skill: {self.__class__.__name__}")
         return virtual_state
@@ -368,7 +372,7 @@ class PolishSkill():
         }
         spin_goal = {
             "angular_speed": -0.5,
-            "time_steps": 200
+            "time_steps": 60
         }
         self.nav.set_goal_pose(goal_pos)
         self.wait_for_nav.wait()
