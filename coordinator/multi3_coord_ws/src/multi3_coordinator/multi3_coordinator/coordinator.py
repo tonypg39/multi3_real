@@ -348,6 +348,7 @@ class CoordinatorNode(Node):
         path = f"{package_path}/multi3_tests/results/"
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{ts}_{self.test_id}_{self.mode}.json"
+        self.get_logger().info(f"Publishing battery results to {filename}...")
         # Export the json to the path
         with open(path + filename, "w") as f:
             json.dump(battery_evol,f)
