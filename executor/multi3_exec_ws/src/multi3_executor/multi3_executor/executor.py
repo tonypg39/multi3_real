@@ -51,7 +51,7 @@ class FragmentExecutor(Node):
         self.virtual_mode = self.get_parameter("mode").value == "virtual"
         self.env_states = None
         self.get_logger().info(f"Starting an exec node [{self.robot_name}] with skills: " + self.skill_list)
-
+        self.flags = []
         #FIXME: Add to json
         self.settings = {
             "heartbeat_period": 3.0

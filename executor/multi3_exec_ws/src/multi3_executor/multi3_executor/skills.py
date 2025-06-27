@@ -233,25 +233,28 @@ class WaitSkill():
         self.finish_event = finish_event
         self.params = params
         self.success = False
-        self.subs = self.node.create_subscription(String, '/signal_states', self.update_flags, 10)
-        wait_str = self.params["target"]
+        #self.subs = self.node.create_subscription(String, '/signal_states', self.update_flags, 10)
+        
+        wait_str = self.params["target"] 
         self.wait_flags = wait_str.split('&')
         self.wait_for_all = Event()
         self.node.get_logger().info(f"Starting up skill: {self.__class__.__name__}")
         
     
-    def update_flags(self,msg):
-        self.flags = json.loads(msg.data)
-        if self.check_flags(self.wait_flags):
-            self.wait_for_all.set()
+    def wait_for_flags(self):
+        while not self.check_flags(self.wait_flags):
+            time.sleep(1)
+        self.wait_for_all.set()
 
     def check_flags(self, wf):
         for f in wf:
-            if f not in self.flags:
+            if f not in self.node.flags:
+                self.node.get_logger().info(f"Did not find flag {f} IN  {self.node.flags}")
                 return False
         return True
 
     def exec(self, virtual_state=None,virtual_effort=None):
+        self.wait_for_flags()
         self.wait_for_all.wait()
         self.success = True
         self.node.get_logger().info(f"Finishing up skill: {self.__class__.__name__}")
@@ -275,7 +278,42 @@ class SendSkill():
         self.success = True
         self.finish_event.set()
         return virtual_state
-        
+
+
+class BaseSkill():
+    def __init__(self, node, params, finish_event, skill_name="") -> None:
+        # Starting skill : base skill
+        self.params = params
+        self.node = node
+        self.finished_event = finish_event
+        self.success = False
+
+        # Create a navigator obj
+        self.wait_for_nav = Event()
+        self.wait_for_mock_skill = Event()
+        self.nav = NativeNavigator(self.node, self.wait_for_nav, self.wait_for_mock_skill)
+        self.node.get_logger().info(f"Starting up skill: {self.__class__.__name__}")
+    
+    def exec(self,virtual_state=None,virtual_effort=None):
+        # It needs: params["room"]["size"]
+        print("Received the params: ")
+        goal_pos = {
+            "x": self.params["location"]["x"],
+            "y": self.params["location"]["y"]
+        }
+        spin_goal = {
+            "angular_speed": 0.3,
+            "time_steps": 40
+        }
+        self.nav.set_goal_pose(goal_pos)
+        self.wait_for_nav.wait()
+        self.nav.set_spin_goal(spin_goal)
+        self.wait_for_mock_skill.wait()
+
+        self.success = True
+        self.finished_event.set()
+        self.node.get_logger().info(f"Finishing up skill: {self.__class__.__name__}")
+        return virtual_state 
 
 class MopSkill():
     def __init__(self, node, params, finish_event, skill_name="") -> None:
@@ -507,7 +545,9 @@ class SkillManager():
             "send_signal": SendSkill,
             "mop": VMopSkill if virtual_mode else MopSkill,
             "vacuum": VVacuumSkill if virtual_mode else VacuumSkill,
-            "polish": VPolishSkill if virtual_mode else PolishSkill
+            "polish": VPolishSkill if virtual_mode else PolishSkill,
+            "declutter": VirtualSKill if virtual_mode else BaseSkill,
+            "sanitize": VirtualSKill if virtual_mode else BaseSkill,
         }
         general_skills = ["scan_perimeter", "thermal_scan","record_video", "analyze_surveillance_data", "alert_security","follow_movement","capture_image","drone_scan","soil_moisture_analysis","data_analysis","apply_treatment","fertilizer_application","pest_control_spray","irrigation_adjustment","drone_recheck","soil_nutrient_test"]
         for skill in general_skills:

@@ -196,12 +196,6 @@ class CoordinatorNode(Node):
         self.robot_states[st[0]] = st[1]
         
 
-
-    # def update_signal_state(self, msg):
-    #     new_signal = msg.data
-    #     if new_signal not in self.signal_states:
-    #         self.signal_states.append(new_signal)
-    
     
     # Publish the signal_states periodically using a Timer object
     def broadcast_signal_states(self):
@@ -365,6 +359,7 @@ class CoordinatorNode(Node):
             self.shutdown_count = 8
             # self.destroy_node()
         self.get_logger().info("------Assignment window------")
+        self.get_logger().info(f"Mission signals so far:{self.signal_states} ")
         robots = self.get_idle_robots()
         fragments = self.get_active_fragments()
         
