@@ -13,7 +13,6 @@ from std_msgs.msg import String
 from rclpy.node import Node
 from concurrent.futures import ThreadPoolExecutor
 import time
-# from multi3_interfaces.srv import Fragment
 from ament_index_python import get_package_prefix
 import sys
 
@@ -63,9 +62,11 @@ class CoordinatorNode(Node):
         self.get_logger().info("$$**MISSION_START**$$")
         self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {mode}")
         self.test_id = test_id
+        self.robot_count = int(self.test_id.split("_")[1])
         self.mode = mode
         self.executors = self.get_active_executors(executors)
         self.robot_inventory = self.read_inventory(test_id)
+        self.start_ready = False
         fragments = self.read_fragments(test_id, mode)
         
         self.signal_pub_timer = self.create_timer(self.coord_settings['signal_states_period'],self.broadcast_signal_states)
@@ -194,6 +195,14 @@ class CoordinatorNode(Node):
             self.idle_robots[st[0]] = False
         
         self.robot_states[st[0]] = st[1]
+        if not self.start_ready:
+            inactive_robot = False
+            for robot in self.robot_inventory.keys():
+                if robot not in self.robot_states:
+                    inactive_robot = True
+            if not inactive_robot:
+                self.get_logger().info("STARTING the mission since all robots are active...")
+                self.start_ready = True
         
 
     
@@ -352,6 +361,9 @@ class CoordinatorNode(Node):
 
     def assign(self):
         if self.shutdown_count > -1:
+            return
+        if not self.start_ready:
+            self.get_logger().info("Waiting for all robots to be active...")
             return
         if self.check_finished():
             self.get_logger().info("$$*MISSION_COMPLETED*$$")
