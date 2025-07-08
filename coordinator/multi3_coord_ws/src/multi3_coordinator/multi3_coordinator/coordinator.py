@@ -203,9 +203,8 @@ class CoordinatorNode(Node):
             if not inactive_robot:
                 self.get_logger().info("STARTING the mission since all robots are active...")
                 self.start_ready = True
-        
 
-    
+
     # Publish the signal_states periodically using a Timer object
     def broadcast_signal_states(self):
         # message = String()

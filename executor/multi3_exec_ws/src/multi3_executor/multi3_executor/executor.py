@@ -113,6 +113,7 @@ class FragmentExecutor(Node):
         with open(f"{package_path}/multi3_tests/tests/{test_id}/initial_positions.json") as f:
             positions = json.load(f)
         initial_pos = positions[self.robot_name]
+        # self.get_logger().info(f"Positions read = {positions} || Init_pos = {initial_pos} || RobotName = {self.robot_name}")
         return initial_pos
     
     def start_reset_srv(self):
@@ -143,7 +144,7 @@ class FragmentExecutor(Node):
         initial_pose.orientation.w = quat[3]
         request.pose = initial_pose
 
-        self.get_logger().info(f'Calling {self.real_robot_namespace}/reset_pose with initial pose...')
+        self.get_logger().info(f'Calling {self.real_robot_namespace}/reset_pose with initial pose {request}...')
 
         future = self.reset_pose_client.call_async(request)
 
