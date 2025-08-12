@@ -27,6 +27,7 @@ ROBOT_NAME = os.getenv("ROBOT_NAME","robotx")
 EXECUTOR_PORT = os.getenv("ROBOT_PORT","6000")
 TB_ID = os.getenv("TB_ID","")
 TEST_ID = os.getenv("TEST_ID","")
+VIRTUAL_MODE = os.getenv("VIRTUAL_MODE","0") == "1"
 
 
 class FragmentExecutor(Node):
@@ -48,7 +49,7 @@ class FragmentExecutor(Node):
         self.exec_port = EXECUTOR_PORT
         test_id = self.get_parameter("test_id").value
         sample_id = self.get_parameter("sample_id").value[1:]
-        self.virtual_mode = self.get_parameter("mode").value == "virtual"
+        self.virtual_mode = self.get_parameter("mode").value == "virtual" or VIRTUAL_MODE
         self.env_states = None
         self.get_logger().info(f"Starting an exec node [{self.robot_name}] with skills: " + self.skill_list)
         self.flags = []
@@ -63,7 +64,7 @@ class FragmentExecutor(Node):
             # self.get_logger().fatal("Test Id and Sample Id needed in Virtual mode")
             # return
             if TEST_ID == "":
-                raise ValueError("Test ID was not received in the Coordinator Node")
+                raise ValueError("Test ID was not received in the Executor Node")
             test_id = TEST_ID
             sample_id = 0
         if self.virtual_mode:

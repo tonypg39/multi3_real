@@ -549,7 +549,7 @@ class SkillManager():
             "declutter": VirtualSKill if virtual_mode else BaseSkill,
             "sanitize": VirtualSKill if virtual_mode else BaseSkill,
         }
-        general_skills = ["scan_perimeter", "thermal_scan","record_video", "analyze_surveillance_data", "alert_security","follow_movement","capture_image","drone_scan","soil_moisture_analysis","data_analysis","apply_treatment","fertilizer_application","pest_control_spray","irrigation_adjustment","drone_recheck","soil_nutrient_test"]
+        general_skills = ["scan_perimeter", "thermal_scan","record_video", "analyze_surveillance_data", "alert_security","follow_movement","capture_image","drone_scan","soil_moisture_analysis","data_analysis","apply_treatment","fertilizer_application","pest_control_spray","irrigation_adjustment","drone_recheck","soil_nutrient_test","locate_parcel","pick_parcel","scan_barcode","categorize_by_destination","check_weight_and_size","label_parcel","move_to_loading_zone","verify_manifest"]
         for skill in general_skills:
             self.sk_map[skill] = VirtualSKill
 

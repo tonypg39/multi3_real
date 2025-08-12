@@ -1,0 +1,106 @@
+services:
+  coordinator:
+    build: ./coordinator
+    environment:
+    - ROS_DOMAIN_ID=55
+    - MODE=bl_0
+    - TEST_ID=test_5_2_t_surveillance_i1_bl1
+    volumes:
+    - ./output:/multi3_coord_ws/src/multi3_tests/multi3_tests/results
+    container_name: coordinator
+    network_mode: host
+  executor1:
+    build: ./executor
+    container_name: executor1
+    environment:
+    - DISPLAY=${DISPLAY}
+    - ROBOT_PORT=6001
+    - EXECUTOR_ID=executor1
+    - ROBOT_NAME=robot_1
+    - VIRTUAL_MODE=1
+    - ROS_ENV=ros_humble
+    - ROS_DOMAIN_ID=1
+    - TEST_ID=test_5_2_t_surveillance_i1_bl1
+    - COORDINATOR_URL=http://localhost:5000
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+    - coordinator
+    network_mode: host
+    privileged: true
+  executor2:
+    build: ./executor
+    container_name: executor2
+    environment:
+    - DISPLAY=${DISPLAY}
+    - ROBOT_PORT=6002
+    - EXECUTOR_ID=executor2
+    - ROBOT_NAME=robot_2
+    - VIRTUAL_MODE=1
+    - ROS_ENV=ros_humble
+    - ROS_DOMAIN_ID=2
+    - TEST_ID=test_5_2_t_surveillance_i1_bl1
+    - COORDINATOR_URL=http://localhost:5000
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+    - coordinator
+    network_mode: host
+    privileged: true
+  executor3:
+    build: ./executor
+    container_name: executor3
+    environment:
+    - DISPLAY=${DISPLAY}
+    - ROBOT_PORT=6003
+    - EXECUTOR_ID=executor3
+    - ROBOT_NAME=robot_3
+    - VIRTUAL_MODE=1
+    - ROS_ENV=ros_humble
+    - ROS_DOMAIN_ID=3
+    - TEST_ID=test_5_2_t_surveillance_i1_bl1
+    - COORDINATOR_URL=http://localhost:5000
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+    - coordinator
+    network_mode: host
+    privileged: true
+  executor4:
+    build: ./executor
+    container_name: executor4
+    environment:
+    - DISPLAY=${DISPLAY}
+    - ROBOT_PORT=6004
+    - EXECUTOR_ID=executor4
+    - ROBOT_NAME=robot_4
+    - VIRTUAL_MODE=1
+    - ROS_ENV=ros_humble
+    - ROS_DOMAIN_ID=4
+    - TEST_ID=test_5_2_t_surveillance_i1_bl1
+    - COORDINATOR_URL=http://localhost:5000
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+    - coordinator
+    network_mode: host
+    privileged: true
+  executor5:
+    build: ./executor
+    container_name: executor5
+    environment:
+    - DISPLAY=${DISPLAY}
+    - ROBOT_PORT=6005
+    - EXECUTOR_ID=executor5
+    - ROBOT_NAME=robot_5
+    - VIRTUAL_MODE=1
+    - ROS_ENV=ros_humble
+    - ROS_DOMAIN_ID=5
+    - TEST_ID=test_5_2_t_surveillance_i1_bl1
+    - COORDINATOR_URL=http://localhost:5000
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+    - coordinator
+    network_mode: host
+    privileged: true

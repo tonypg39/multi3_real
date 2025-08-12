@@ -1,6 +1,3 @@
-# Coordinator Tasks
-# - Listen to /mission_comms and update the flag_table
-# assign the available fragment to idle robots
 import json
 import logging
 from datetime import datetime
@@ -18,16 +15,11 @@ import sys
 
 COORDINATOR_URL = os.getenv("COORDINATOR_URL", "http://localhost:5000")
 TEST_ID = os.getenv("TEST_ID", "")
-MODE = os.getenv("MODE", "")
+# MODE = os.getenv("MODE", "")
 
 class CoordinatorNode(Node):
     def __init__(self):
         super().__init__("multi3_coordinator")
-        executors = {
-            "robot_1": "http://localhost:6001",
-            "robot_2": "http://localhost:6002",
-            "robot_3": "http://localhost:6003",
-        }
         self.coord_settings = {
             "signal_states_period": 1.0,
             "assignment_period": 1.5
@@ -37,14 +29,12 @@ class CoordinatorNode(Node):
         self.robot_states = {}
         self.signal_states = ['SYSTEM_START']
         
-        # self.wait_for_start_trigger()
-
         # Declare Parameters
         self.declare_parameter("test_id", "")
-        self.declare_parameter("mode", "")
+        # self.declare_parameter("mode", "")
 
         test_id = self.get_parameter("test_id").value
-        mode = self.get_parameter("mode").value
+        # mode = self.get_parameter("mode").value
         
         
         if test_id == "":
@@ -54,24 +44,22 @@ class CoordinatorNode(Node):
             # self.get_logger().fatal("No test_id specified!!")
             # return
         
-        if mode == "":
-            if TEST_ID == "":
-                raise ValueError("MODE (multi3 |bl_0 |...) was not received in the Coordinator Node")
-            mode = MODE
         
-        self.get_logger().info("$$**MISSION_START**$$")
-        self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {mode}")
         self.test_id = test_id
         self.robot_count = int(self.test_id.split("_")[1])
-        self.mode = mode
-        self.executors = self.get_active_executors(executors)
+        self.mode = self.test_id.split("_")[-1]
+        self.executors = self.get_active_executors()
+        
+        self.get_logger().info("$$**MISSION_START**$$")
+        self.get_logger().info(f"Starting the Coordinator node with params ==> test_id = {test_id} || mode = {self.mode}")
         self.robot_inventory = self.read_inventory(test_id)
         self.start_ready = False
-        fragments = self.read_fragments(test_id, mode)
+        fragments = self.read_fragments(test_id)
         
         self.signal_pub_timer = self.create_timer(self.coord_settings['signal_states_period'],self.broadcast_signal_states)
         self.assignment_timer = self.create_timer(self.coord_settings['assignment_period'],self.assign)
         self.fragments = self.load_fragments(fragments)
+        self.total_number_signals = self.get_total_of_signals()
         self.executor_pool = ThreadPoolExecutor(max_workers=8)
         # self.get_logger().info(f"The loaded fragments: {self.fragments}")
         # Dict to keep track of the states of executed fragments 
@@ -83,23 +71,12 @@ class CoordinatorNode(Node):
         self.setup_routes()
         threading.Thread(target=self.run_flask, daemon=True).start()
     
-    def get_active_executors(self, execs):
+    def get_active_executors(self):
         robot_count = int(self.test_id.split("_")[1])
-        d = list(execs.items())
         active_execs = {}
         for i in range(robot_count):
-            active_execs[d[i][0]] = d[i][1]
+            active_execs["robot_"+str(i+1)] = f"http://localhost:{6000+i+1}"
         return active_execs 
-
-
-    def wait_for_start_trigger(self):
-        flag_path = "/tmp/start.flag"
-        self.get_logger().info("Waiting for the trigger...")
-        rate = self.create_rate(1)
-        while os.path.exists(flag_path) and False:
-            rate.sleep()
-        
-        self.get_logger().info("Trigger Flag detected")
     
     # Communication Methods
     def send_signal_states(self, message_data):
@@ -154,10 +131,10 @@ class CoordinatorNode(Node):
         self.app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
     
 
-    def read_fragments(self, test_id, mode):
+    def read_fragments(self, test_id):
         package_path = get_package_prefix("multi3_tests").replace("install","src")
         # print(package_path)
-        with open(f"{package_path}/multi3_tests/tests/{test_id}/tasks_{mode}.json") as f:
+        with open(f"{package_path}/multi3_tests/tests/{test_id}/tasks.json") as f:
             frags = json.load(f)
         return frags
 
@@ -204,7 +181,17 @@ class CoordinatorNode(Node):
                 self.get_logger().info("STARTING the mission since all robots are active...")
                 self.start_ready = True
         
-
+    def send_finish_signal(self):
+        package_path = get_package_prefix("multi3_tests").replace("install","src")
+        self.get_logger().info(f"The package path is: {package_path}")
+        path = f"{package_path}/multi3_tests/results/"
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{self.test_id}_finished.json"
+        self.get_logger().info(f"Writing finished signal in {filename}...")
+        # Export the json to the path
+        with open(path + filename, "w") as f:
+            json.dump({"test":"success"},f)
+            
     
     # Publish the signal_states periodically using a Timer object
     def broadcast_signal_states(self):
@@ -213,11 +200,13 @@ class CoordinatorNode(Node):
         if self.shutdown_count > -1:
             if self.shutdown_count == 0:
                 self.get_logger().info("$$*MISSION_STOPPED*$$")
+                self.send_finish_signal()
                 self.assignment_timer.cancel()
                 self.signal_pub_timer.cancel()
                 self.shutdown_count = 5
                 self.destroy_node()
                 rclpy.shutdown()
+
                 sys.exit(0)
             signal_list.append("_SHUTDOWN_")
             self.shutdown_count -= 1
@@ -251,9 +240,19 @@ class CoordinatorNode(Node):
                 continue
             if self.get_core_task(t["id"]) not in self.robot_inventory[robot]:
                 able = False
-        self.get_logger().info(f"Checking elegibility for {robot} and tasks {fragment['tasks']} = {able}")
+        # self.get_logger().info(f"Checking elegibility for {robot} and tasks {fragment['tasks']} = {able}")
         return able
     
+    def get_total_of_signals(self):
+        if self.mode == "multi3":
+            return len(self.fragments)
+        cnt = 0
+        for f in self.fragments.values():
+            for t in f["tasks"]:
+                if t["id"].find("send_signal") >-1:
+                    cnt+=1
+        return cnt
+
     def get_core_task(self, task):
         sep = task.find("^")
         if sep > -1:
@@ -367,15 +366,17 @@ class CoordinatorNode(Node):
             return
         if self.check_finished():
             self.get_logger().info("$$*MISSION_COMPLETED*$$")
-            self.collect_battery_info()
+            # self.collect_battery_info()
             self.shutdown_count = 8
             # self.destroy_node()
         self.get_logger().info("------Assignment window------")
-        self.get_logger().info(f"Mission signals so far:{self.signal_states} ")
+        # self.get_logger().info(f"Mission signals so far:{self.signal_states} ")
+        progress = round(len(self.signal_states)*100/self.total_number_signals+1,2)
+        self.get_logger().info(f"Progress: {progress}")
         robots = self.get_idle_robots()
         fragments = self.get_active_fragments()
         
-        self.log_fragments(fragments, "Active fragment")
+        # self.log_fragments(fragments, "Active fragment")
         # self.log_futures()
         self.log_robots()
         # self.get_logger().info(f"The active robots are: {robots}")

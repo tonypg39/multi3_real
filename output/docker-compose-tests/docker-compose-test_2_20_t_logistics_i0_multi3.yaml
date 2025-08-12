@@ -1,0 +1,49 @@
+services:
+  coordinator:
+    build: ./coordinator
+    environment:
+    - ROS_DOMAIN_ID=55
+    - MODE=bl_0
+    - TEST_ID=test_2_20_t_logistics_i0_multi3
+    volumes:
+    - ./output:/multi3_coord_ws/src/multi3_tests/multi3_tests/results
+    container_name: coordinator
+    network_mode: host
+  executor1:
+    build: ./executor
+    container_name: executor1
+    environment:
+    - DISPLAY=${DISPLAY}
+    - ROBOT_PORT=6001
+    - EXECUTOR_ID=executor1
+    - ROBOT_NAME=robot_1
+    - VIRTUAL_MODE=1
+    - ROS_ENV=ros_humble
+    - ROS_DOMAIN_ID=1
+    - TEST_ID=test_2_20_t_logistics_i0_multi3
+    - COORDINATOR_URL=http://localhost:5000
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+    - coordinator
+    network_mode: host
+    privileged: true
+  executor2:
+    build: ./executor
+    container_name: executor2
+    environment:
+    - DISPLAY=${DISPLAY}
+    - ROBOT_PORT=6002
+    - EXECUTOR_ID=executor2
+    - ROBOT_NAME=robot_2
+    - VIRTUAL_MODE=1
+    - ROS_ENV=ros_humble
+    - ROS_DOMAIN_ID=2
+    - TEST_ID=test_2_20_t_logistics_i0_multi3
+    - COORDINATOR_URL=http://localhost:5000
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+    - coordinator
+    network_mode: host
+    privileged: true

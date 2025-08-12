@@ -6,11 +6,15 @@ def sample_combinations(data, N):
     lens = [len(group) for group in data]
     max_total = 10000
     total = min(math.prod(lens),max_total)
+    replicate_last = False
+    total_n = N
 
     if N > total:
-        raise ValueError(f"Cannot sample {N} unique combinations: only {total} possible.")
+        replicate_last = True
+        total_n = total
+        # raise ValueError(f"Cannot sample {N} unique combinations: only {total} possible.")
     # Sample N unique indices
-    indices = random.sample(range(total), N)
+    indices = random.sample(range(total),total_n)
 
     # Convert index to combination using mixed-radix conversion
     result = []
@@ -22,6 +26,11 @@ def sample_combinations(data, N):
         combo = list(reversed(combo))
         selected = tuple(data[i][j] for i, j in enumerate(combo))
         result.append(selected)
+    
+    if replicate_last:
+        last_idx = len(result)-1
+        for i in range(total_n,N):
+            result.append(result[last_idx])
 
     return result
 

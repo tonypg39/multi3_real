@@ -1,0 +1,86 @@
+{
+    "task_id": "root",
+    "type": "abstract",
+    "method": "sequential",
+    "sequence": "NIL",
+    "variables": {},
+    "subtasks": [
+        {
+            "task_id": "parcel_handling",
+            "type": "multi-instance",
+            "variables": {
+                "loopType": "parallel",
+                "loopCount": "$MISSION_SIZE"
+            },
+            "subtasks": [
+                {
+                    "task_id": "locate_parcel",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                },
+                {
+                    "task_id": "pick_parcel",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                },
+                {
+                    "task_id": "scan_barcode",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                }
+            ]
+        },
+        {
+            "task_id": "sorting",
+            "type": "abstract",
+            "method": "parallel",
+            "sequence": "NIL",
+            "variables": {},
+            "subtasks": [
+                {
+                    "task_id": "categorize_by_destination",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                },
+                {
+                    "task_id": "check_weight_and_size",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                }
+            ]
+        },
+        {
+            "task_id": "prepare_for_shipping",
+            "type": "multi-instance",
+            "variables": {
+                "loopType": "sequential",
+                "loopCount": "$MISSION_SIZE"
+            },
+            "subtasks": [
+                {
+                    "task_id": "label_parcel",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                },
+                {
+                    "task_id": "move_to_loading_zone",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                },
+                {
+                    "task_id": "verify_manifest",
+                    "type": "concrete",
+                    "sequence": "NIL",
+                    "variables": {}
+                }
+            ]
+        }
+    ]
+}

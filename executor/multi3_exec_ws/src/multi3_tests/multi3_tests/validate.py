@@ -121,6 +121,7 @@ def generate_validation_specs(node,path,test_config):
     sampling_size = test_config["sampling_size"]
     mission_sizes = test_config["mission_sizes"]
     robot_counts = test_config["robot_counts"]
+    inventory_sample_size = test_config["inventory_sample_size"]
     area_limits = test_config["area_limits"]
     effort_limits = test_config["effort_limits"] 
     scenarios = test_config["scenarios"]
@@ -129,39 +130,56 @@ def generate_validation_specs(node,path,test_config):
     for ms in mission_sizes:
         for rc in robot_counts:
             for scenario in scenarios:
-                node.get_logger().info(f"Working on Test : {rc}|{ms}|{scenario}")
-                mission = load_scenario(path, scenario, ms)
-                skills = get_mission_skills(mission)
-                inv = generate_inventory(skills, rc) 
-                data = generate_mission_data(mission,ms,area_limits)
+                for inv_idx in range(inventory_sample_size):
+                    node.get_logger().info(f"Working on Test : {rc}|{ms}|{scenario}|i{inv_idx}")
+                    mission = load_scenario(path, scenario, ms)
+                    skills = get_mission_skills(mission)
+                    inv = generate_inventory(skills, rc) 
+                    data = generate_mission_data(mission,ms,area_limits)
 
-                # FIXME: Test this integration into the whole pipeline
-                static_assignments = sample_static_assignments(mission,inv,bl_assign_sample_size)                
-                # print("Static Assignments:=> ",static_assignments)
-                env_states = []
-                for _ in range(sampling_size):
-                    env_st = generate_env_state(mission, ms, effort_limits)
-                    env_states.append(env_st)
-                
+                    # FIXME: Test this integration into the whole pipeline
+                    static_assignments = sample_static_assignments(mission,inv,bl_assign_sample_size)                
+                    # print("Static Assignments:=> ",static_assignments)
+                    env_states = []
+                    for _ in range(sampling_size):
+                        env_st = generate_env_state(mission, ms, effort_limits)
+                        env_states.append(env_st)
+                    
 
-                plans = generate_fragmented_plans(mission, data, static_assignments)
-                validation_path = f"{path}/tests/test_{rc}_{ms}_{scenario}"
-                os.popen(f"mkdir -p {validation_path}")
-                time.sleep(1)
-                file_obj = [
-                    ("inventory.json",inv),
-                    ("data.json",data),
-                    ("env_states.json",env_states),
-                    # ("tasks_baseline.json",plans["baseline"]),
-                    ("tasks_multi3.json",plans["multi3"]),
-                ]
-                for i, plan_bl in enumerate(plans["baseline"]):
-                    file_obj.append((f"tasks_bl_{i}.json", plan_bl))
+                    plans = generate_fragmented_plans(mission, data, static_assignments)
 
-                for filename,obj in file_obj:
-                    with open(validation_path + "/" + filename,"w") as f:
-                        json.dump(obj,f)
+                    
+                    # Generate one file folder for each of the RCxMSxSCxINVxBL_SS
+                    # Multi3 folder
+                    validation_path_m3 = f"{path}/tests/test_{rc}_{ms}_{scenario}_i{inv_idx}_multi3"
+                    os.popen(f"mkdir -p {validation_path_m3}")
+                    time.sleep(1)
+                    file_obj = [
+                        ("inventory.json",inv),
+                        ("data.json",data),
+                        ("env_states.json",env_states),
+                    ]
+                    files_m3 = file_obj.copy()
+                    files_m3.append(("tasks.json",plans["multi3"]))
+                    # node.get_logger().info(files_m3)
+                    for filename,obj in files_m3:
+                        
+                        with open(validation_path_m3 + "/" + filename,"w") as f:
+                            json.dump(obj,f)
 
+                    for i, plan_bl in enumerate(plans["baseline"]):
+                        validation_path_bi = f"{path}/tests/test_{rc}_{ms}_{scenario}_i{inv_idx}_bl{i}"
+                        os.popen(f"mkdir -p {validation_path_bi}")
+                        time.sleep(1)
+                        files_bi = file_obj.copy()
+                        files_bi.append((f"tasks.json", plan_bl))
+                        for filename,obj in files_bi:
+                            with open(validation_path_bi + "/" + filename,"w") as f:
+                                json.dump(obj,f)
+
+                    
+
+                    
 
 # FIXME: Multimission Generalization to the Multi-Scenario validation
 def generate_multi_mission_specs(node, path, test_config):
