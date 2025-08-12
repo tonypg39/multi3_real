@@ -3,8 +3,8 @@ services:
     build: ./coordinator
     environment:
       - ROS_DOMAIN_ID=55
-      - MODE=bl_0
-      - TEST_ID=test_2_5_i9_real_clean
+      - MODE=multi3
+      - TEST_ID=test_3_2_i0_clean_video
     volumes:
       - ./output:/multi3_coord_ws/src/multi3_tests/multi3_tests/results
     container_name: coordinator
@@ -22,7 +22,7 @@ services:
       - ROS_ENV=ros_humble
       - ROS_DOMAIN_ID=1
       - COORDINATOR_URL=http://localhost:5000
-      - TEST_ID=test_2_5_i9_real_clean
+      - TEST_ID=test_3_2_i0_clean_video
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
     depends_on:
@@ -38,33 +38,33 @@ services:
       - ROBOT_PORT=6002
       - EXECUTOR_ID=executor2
       - ROBOT_NAME=robot_2
-      - TB_ID=Turtlebot_02492
+      - TB_ID=Turtlebot_02493
       - ROS_ENV=ros_humble
-      - ROS_DOMAIN_ID=4
+      - ROS_DOMAIN_ID=3
       - COORDINATOR_URL=http://localhost:5000
-      - TEST_ID=test_2_5_i9_real_clean
+      - TEST_ID=test_3_2_i0_clean_video
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
     depends_on:
       - coordinator
     network_mode: host  # optional: required for some ROS GUI tools like RViz to find ROS master
 
-  # executor3:
-  #   build: ./executor
-  #   container_name: executor3
-  #   environment:
-  #     - DISPLAY=${DISPLAY}
-  #     - ROBOT_PORT=6003
-  #     - EXECUTOR_ID=executor3
-  #     - ROBOT_NAME=robot_3
-  #     - TB_ID=Turtlebot_02492
-  #     - ROS_ENV=ros_humble
-  #     - ROS_DOMAIN_ID=2
-  #     - COORDINATOR_URL=http://localhost:5000
-  #     - TEST_ID=test_2_5_i9_real_clean
-  #   volumes:
-  #     - /tmp/.X11-unix:/tmp/.X11-unix
-  #   depends_on:
-  #     - coordinator
-  #   network_mode: host  # optional: required for some ROS GUI tools like RViz to find ROS master
+  executor3:
+    build: ./executor
+    container_name: executor3
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROBOT_PORT=6003
+      - EXECUTOR_ID=executor3
+      - ROBOT_NAME=robot_3
+      - TB_ID=Turtlebot_02492
+      - ROS_ENV=ros_humble
+      - ROS_DOMAIN_ID=4
+      - COORDINATOR_URL=http://localhost:5000
+      - TEST_ID=test_3_2_i0_clean_video
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    depends_on:
+      - coordinator
+    network_mode: host  # optional: required for some ROS GUI tools like RViz to find ROS master
 

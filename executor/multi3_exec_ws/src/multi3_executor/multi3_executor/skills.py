@@ -187,7 +187,7 @@ class NativeNavigator():
         vel_msg.angular.z = angular_speed
         
         
-        self.node.get_logger().info(f"The distance to the goal is: {distance}")
+        self.node.get_logger().info(f"The distance to the goal is: {distance} || {x},{y}")
         if distance > self.control_params["dist_threshold"]:
             # continue to move the robot
             self.cmd_pub.publish(vel_msg)
