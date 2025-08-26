@@ -58,7 +58,7 @@ def main():
     }
     
     ws_path = "./"
-    results_path = "./test_logs/"
+    results_path = "../output/test_logs/"
 
 
     global_results = {}
