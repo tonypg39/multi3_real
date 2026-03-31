@@ -33,7 +33,7 @@ multi3_real
 ```
 
 ## Approach
-![Multi3 Framework](output/images/overview.png)
+![Multi3 Framework](doc/overview.png)
 
 Multi-3 is a framework for executing multiple missions (multi-missions) with multiple instances of the same
 task (multi-instance) using multiple robots (multi-robots). 
@@ -46,7 +46,7 @@ We validate the solution at work on a set of multi-robot systems scenarios in di
 Multi-3 is viable, reduces the robots’ idle time, and effectively allows the execution of multiple missions at a time.
 
 ### Experiments Results
-![Multi3 Framework](output/images/results_ct.png)
+![Multi3 Framework](doc/results_ct.png)
 
 ## Experiment Replication 
 
