@@ -1,0 +1,229 @@
+coordinator  | Starting >>> multi3_coordinator
+coordinator  | Starting >>> multi3_tests
+coordinator  | Finished <<< multi3_coordinator [1.36s]
+coordinator  | Finished <<< multi3_tests [1.37s]
+coordinator  | 
+coordinator  | Summary: 2 packages finished [1.90s]
+coordinator  | [INFO] [1785922534.571954963] [multi3_coordinator]: Received test_id parameter: test-multi_2_2_t_cleaning_i2_multi3
+coordinator  | [INFO] [1785922534.572483744] [multi3_coordinator]: Testing multi-mission mode.
+coordinator  | [INFO] [1785922534.572938298] [multi3_coordinator]: $$**MISSION_START**$$
+coordinator  | [INFO] [1785922534.573328461] [multi3_coordinator]: Starting the Coordinator node with params ==> test_id = test-multi_2_2_t_cleaning_i2_multi3 || mode = multi3
+coordinator  |  * Serving Flask app 'multi3_coordinator.coordinator'
+coordinator  |  * Debug mode: off
+coordinator  | [INFO] [1785922534.679869622] [multi3_coordinator]: Updated fragments: {'fr_0': {'status': 'waiting', 'fragment_id': 'fr_0', 'age': 0, 'priority': 0, 'initial_wait': 'SYSTEM_START', 'tasks': [{'id': 'vacuum^0', 'vars': {'location': {'x': 0.0838423867106961, 'y': 1.7546997973894012}}}, {'id': 'send_signal|vacuum^0', 'vars': {}}]}, 'fr_1': {'status': 'waiting', 'fragment_id': 'fr_1', 'age': 0, 'priority': 0, 'initial_wait': 'vacuum^0', 'tasks': [{'id': 'mop^0', 'vars': {'location': {'x': 0.0838423867106961, 'y': 1.7546997973894012}}}, {'id': 'send_signal|mop^0', 'vars': {}}]}, 'fr_2': {'status': 'waiting', 'fragment_id': 'fr_2', 'age': 0, 'priority': 0, 'initial_wait': 'mop^0', 'tasks': [{'id': 'polish^0', 'vars': {'location': {'x': 0.0838423867106961, 'y': 1.7546997973894012}}}, {'id': 'send_signal|polish^0', 'vars': {}}]}, 'fr_3': {'status': 'waiting', 'fragment_id': 'fr_3', 'age': 0, 'priority': 0, 'initial_wait': 'SYSTEM_START', 'tasks': [{'id': 'vacuum^1', 'vars': {'location': {'x': -0.015739721340148893, 'y': -1.6894636782693144}}}, {'id': 'send_signal|vacuum^1', 'vars': {}}]}, 'fr_4': {'status': 'waiting', 'fragment_id': 'fr_4', 'age': 0, 'priority': 0, 'initial_wait': 'vacuum^1', 'tasks': [{'id': 'mop^1', 'vars': {'location': {'x': -0.015739721340148893, 'y': -1.6894636782693144}}}, {'id': 'send_signal|mop^1', 'vars': {}}]}, 'fr_5': {'status': 'waiting', 'fragment_id': 'fr_5', 'age': 0, 'priority': 0, 'initial_wait': 'mop^1', 'tasks': [{'id': 'polish^1', 'vars': {'location': {'x': -0.015739721340148893, 'y': -1.6894636782693144}}}, {'id': 'send_signal|polish^1', 'vars': {}}]}, 'fr_6': {'status': 'waiting', 'fragment_id': 'fr_6', 'age': 0, 'priority': 999, 'initial_wait': 'SYSTEM_START', 'tasks': [{'id': 'dry', 'vars': {'location': {'x': 0, 'y': -1}}}]}}
+coordinator  | [INFO] [1785922534.681104447] [multi3_coordinator]: Total number of signals: 7
+coordinator  | [INFO] [1785922536.077510805] [multi3_coordinator]: Waiting for all robots to be active...
+coordinator  | [INFO] [1785922536.797968640] [multi3_coordinator]: STARTING the mission since all robots are active...
+coordinator  | [INFO] [1785922537.592593445] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922537.593495110] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922537.594439159] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => idle || robot_2 => idle || 
+coordinator  | [INFO] [1785922537.597669265] [multi3_coordinator]: Fragments assigned. Time: 2.645 milliseconds
+coordinator  | [INFO] [1785922537.600479965] [multi3_coordinator]: Sending Fragment fr_6 to Robot robot_1
+coordinator  | [INFO] [1785922539.077909123] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922539.079937276] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922539.081084407] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy  || robot_2 => idle || 
+coordinator  | [INFO] [1785922539.082201328] [multi3_coordinator]: No fragments assigned. Time: 2.908 milliseconds
+coordinator  | [INFO] [1785922540.583267279] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922540.583665400] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922540.584368970] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922540.584921229] [multi3_coordinator]: No fragments assigned. Time: 1.073 milliseconds
+coordinator  | [INFO] [1785922542.075378063] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922542.076063874] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922542.076482915] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922542.076950258] [multi3_coordinator]: No fragments assigned. Time: 1.080 milliseconds
+coordinator  | [INFO] [1785922543.587867091] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922543.588927757] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922543.589703433] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922543.590560342] [multi3_coordinator]: No fragments assigned. Time: 1.754 milliseconds
+coordinator  | [INFO] [1785922545.076001444] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922545.076523610] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922545.076915438] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922545.077373439] [multi3_coordinator]: No fragments assigned. Time: 0.879 milliseconds
+coordinator  | [INFO] [1785922546.590022003] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922546.591437391] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922546.592582841] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922546.593604423] [multi3_coordinator]: No fragments assigned. Time: 2.546 milliseconds
+coordinator  | [INFO] [1785922548.076323349] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922548.077029055] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922548.078609644] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922548.079125439] [multi3_coordinator]: No fragments assigned. Time: 2.287 milliseconds
+coordinator  | [INFO] [1785922549.583978752] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922549.584573157] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922549.585174124] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922549.586520099] [multi3_coordinator]: No fragments assigned. Time: 1.340 milliseconds
+coordinator  | [INFO] [1785922551.075878975] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922551.076389052] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922551.076812191] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922551.077505103] [multi3_coordinator]: No fragments assigned. Time: 0.915 milliseconds
+coordinator  | [INFO] [1785922552.590885523] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922552.591841173] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922552.592935037] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922552.594034620] [multi3_coordinator]: No fragments assigned. Time: 2.092 milliseconds
+coordinator  | [INFO] [1785922554.078060469] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922554.080689296] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922554.084872227] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922554.086194206] [multi3_coordinator]: No fragments assigned. Time: 6.777 milliseconds
+coordinator  | [INFO] [1785922555.591213655] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922555.592113821] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922555.593168799] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922555.594177205] [multi3_coordinator]: No fragments assigned. Time: 2.064 milliseconds
+coordinator  | [INFO] [1785922557.078516721] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922557.080112445] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922557.081967194] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_2 => idle || 
+coordinator  | [INFO] [1785922557.083901132] [multi3_coordinator]: No fragments assigned. Time: 3.384 milliseconds
+coordinator  | [INFO] [1785922558.591093185] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922558.591904028] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922558.592762812] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => idle || robot_2 => idle || 
+coordinator  | [INFO] [1785922558.596150407] [multi3_coordinator]: Sending Fragment fr_0 to Robot robot_1
+coordinator  | [INFO] [1785922558.599688581] [multi3_coordinator]: Fragments assigned. Time: 1.884 milliseconds
+coordinator  | [INFO] [1785922560.076522109] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922560.077567842] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922560.078901418] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy  || robot_2 => idle || 
+coordinator  | [INFO] [1785922560.080095891] [multi3_coordinator]: No fragments assigned. Time: 2.387 milliseconds
+coordinator  | [INFO] [1785922561.592853554] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922561.593811066] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922561.595100568] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922561.596708940] [multi3_coordinator]: No fragments assigned. Time: 2.476 milliseconds
+coordinator  | [INFO] [1785922563.079034228] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922563.080788454] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922563.083557972] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922563.085657609] [multi3_coordinator]: No fragments assigned. Time: 4.615 milliseconds
+coordinator  | [INFO] [1785922564.591669274] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922564.592645373] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922564.593949471] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922564.595735090] [multi3_coordinator]: No fragments assigned. Time: 2.290 milliseconds
+coordinator  | [INFO] [1785922566.076050134] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922566.076493620] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922566.076863082] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922566.077476061] [multi3_coordinator]: No fragments assigned. Time: 0.786 milliseconds
+coordinator  | [INFO] [1785922567.590942891] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922567.592000949] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922567.593446922] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922567.594426405] [multi3_coordinator]: No fragments assigned. Time: 2.544 milliseconds
+coordinator  | [INFO] [1785922569.076019435] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922569.076665453] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922569.077459267] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922569.078179497] [multi3_coordinator]: No fragments assigned. Time: 1.447 milliseconds
+coordinator  | [INFO] [1785922570.592704348] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922570.593691889] [multi3_coordinator]: Progress: 15.29
+coordinator  | [INFO] [1785922570.594618408] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922570.595716753] [multi3_coordinator]: No fragments assigned. Time: 1.893 milliseconds
+coordinator  | [INFO] [1785922572.078211479] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922572.080011007] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922572.081848659] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^0 || robot_2 => idle || 
+coordinator  | [INFO] [1785922572.086508770] [multi3_coordinator]: Fragments assigned. Time: 3.563 milliseconds
+coordinator  | [INFO] [1785922572.087856223] [multi3_coordinator]: Sending Fragment fr_1 to Robot robot_2
+coordinator  | [INFO] [1785922573.588863451] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922573.591071838] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922573.592049741] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => idle || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922573.594664585] [multi3_coordinator]: Fragments assigned. Time: 3.968 milliseconds
+coordinator  | [INFO] [1785922573.595742446] [multi3_coordinator]: Sending Fragment fr_3 to Robot robot_1
+coordinator  | [INFO] [1785922575.078385048] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922575.079885473] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922575.081514215] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy  || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922575.084398803] [multi3_coordinator]: No fragments assigned. Time: 3.215 milliseconds
+coordinator  | [INFO] [1785922576.591862966] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922576.592625764] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922576.593933049] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922576.594808277] [multi3_coordinator]: No fragments assigned. Time: 2.064 milliseconds
+coordinator  | [INFO] [1785922578.078093766] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922578.079373831] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922578.082946631] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922578.084640249] [multi3_coordinator]: No fragments assigned. Time: 4.797 milliseconds
+coordinator  | [INFO] [1785922579.590610030] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922579.591621644] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922579.592709377] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922579.593766021] [multi3_coordinator]: No fragments assigned. Time: 2.060 milliseconds
+coordinator  | [INFO] [1785922581.078166172] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922581.079855357] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922581.081816582] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922581.083059972] [multi3_coordinator]: No fragments assigned. Time: 3.534 milliseconds
+coordinator  | [INFO] [1785922582.592500782] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922582.593413747] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922582.594440485] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922582.595568772] [multi3_coordinator]: No fragments assigned. Time: 1.986 milliseconds
+coordinator  | [INFO] [1785922584.078136341] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922584.079746984] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922584.081487517] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922584.083936985] [multi3_coordinator]: No fragments assigned. Time: 3.282 milliseconds
+coordinator  | [INFO] [1785922585.582014912] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922585.582443889] [multi3_coordinator]: Progress: 29.57
+coordinator  | [INFO] [1785922585.583057455] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922585.583619992] [multi3_coordinator]: No fragments assigned. Time: 0.998 milliseconds
+coordinator  | [INFO] [1785922587.078076052] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922587.079741538] [multi3_coordinator]: Progress: 43.86
+coordinator  | [INFO] [1785922587.081522761] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy vacuum^1 || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922587.083591907] [multi3_coordinator]: No fragments assigned. Time: 3.247 milliseconds
+coordinator  | [INFO] [1785922588.592393677] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922588.593281186] [multi3_coordinator]: Progress: 43.86
+coordinator  | [INFO] [1785922588.594415796] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => idle || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922588.597358775] [multi3_coordinator]: Fragments assigned. Time: 2.306 milliseconds
+coordinator  | [INFO] [1785922588.598355206] [multi3_coordinator]: Sending Fragment fr_4 to Robot robot_1
+coordinator  | [INFO] [1785922590.077356017] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922590.078529978] [multi3_coordinator]: Progress: 58.14
+coordinator  | [INFO] [1785922590.079933751] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy  || robot_2 => busy mop^0 || 
+coordinator  | [INFO] [1785922590.081809178] [multi3_coordinator]: No fragments assigned. Time: 2.645 milliseconds
+coordinator  | [INFO] [1785922591.590889518] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922591.591833063] [multi3_coordinator]: Progress: 58.14
+coordinator  | [INFO] [1785922591.592940677] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^1 || robot_2 => idle || 
+coordinator  | [INFO] [1785922591.596261183] [multi3_coordinator]: Fragments assigned. Time: 2.496 milliseconds
+coordinator  | [INFO] [1785922591.597338861] [multi3_coordinator]: Sending Fragment fr_2 to Robot robot_2
+coordinator  | [INFO] [1785922593.077331282] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922593.078648191] [multi3_coordinator]: Progress: 58.14
+coordinator  | [INFO] [1785922593.080480924] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^1 || robot_2 => busy  || 
+coordinator  | [INFO] [1785922593.081745117] [multi3_coordinator]: No fragments assigned. Time: 3.127 milliseconds
+coordinator  | [INFO] [1785922594.588163763] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922594.588912341] [multi3_coordinator]: Progress: 58.14
+coordinator  | [INFO] [1785922594.590267951] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922594.591407503] [multi3_coordinator]: No fragments assigned. Time: 2.072 milliseconds
+coordinator  | [INFO] [1785922596.077888806] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922596.079913164] [multi3_coordinator]: Progress: 58.14
+coordinator  | [INFO] [1785922596.082829061] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922596.085015738] [multi3_coordinator]: No fragments assigned. Time: 4.727 milliseconds
+coordinator  | [INFO] [1785922597.587634610] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922597.588624095] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922597.589974179] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922597.591645060] [multi3_coordinator]: No fragments assigned. Time: 2.494 milliseconds
+coordinator  | [INFO] [1785922599.078013849] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922599.079734998] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922599.081834205] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922599.083089314] [multi3_coordinator]: No fragments assigned. Time: 3.593 milliseconds
+coordinator  | [INFO] [1785922600.585753336] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922600.586672798] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922600.588137949] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => idle || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922600.589752744] [multi3_coordinator]: Fragments assigned. Time: 2.567 milliseconds
+coordinator  | [INFO] [1785922600.590985191] [multi3_coordinator]: Sending Fragment fr_5 to Robot robot_1
+coordinator  | [INFO] [1785922602.077028756] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922602.078139715] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922602.079916774] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy  || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922602.082789314] [multi3_coordinator]: No fragments assigned. Time: 3.385 milliseconds
+coordinator  | [INFO] [1785922603.586611917] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922603.587345016] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922603.588544137] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922603.589313357] [multi3_coordinator]: No fragments assigned. Time: 1.927 milliseconds
+coordinator  | [INFO] [1785922605.075535993] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922605.076075106] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922605.076713773] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922605.077620205] [multi3_coordinator]: No fragments assigned. Time: 1.111 milliseconds
+coordinator  | [INFO] [1785922606.583944637] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922606.584539439] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922606.585516140] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922606.586377377] [multi3_coordinator]: No fragments assigned. Time: 1.751 milliseconds
+coordinator  | [INFO] [1785922608.077019468] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922608.078252665] [multi3_coordinator]: Progress: 72.43
+coordinator  | [INFO] [1785922608.080286043] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_2 => busy polish^0 || 
+coordinator  | [INFO] [1785922608.082015455] [multi3_coordinator]: No fragments assigned. Time: 3.285 milliseconds
+coordinator  | [INFO] [1785922609.587539892] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922609.588180208] [multi3_coordinator]: Progress: 86.71
+coordinator  | [INFO] [1785922609.589043392] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_2 => idle || 
+coordinator  | [INFO] [1785922609.590296700] [multi3_coordinator]: No fragments assigned. Time: 1.468 milliseconds
+coordinator  | [INFO] [1785922611.077753709] [multi3_coordinator]: $$*MISSION_COMPLETED*$$
+coordinator  | [INFO] [1785922611.079277348] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785922611.081440821] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785922611.082938809] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_2 => idle || 
+coordinator  | [INFO] [1785922611.084576671] [multi3_coordinator]: No fragments assigned. Time: 3.440 milliseconds
+coordinator  | [INFO] [1785922619.577760729] [multi3_coordinator]: $$*MISSION_STOPPED*$$
+coordinator  | [INFO] [1785922619.579247659] [multi3_coordinator]: The package path is: /multi3_coord_ws/src/multi3_tests
+coordinator  | [INFO] [1785922619.582285574] [multi3_coordinator]: Writing finished signal in test-multi_2_2_t_cleaning_i2_multi3_finished.json...
+coordinator  | Starting >>> multi3_coordinator
+coordinator  | Starting >>> multi3_tests

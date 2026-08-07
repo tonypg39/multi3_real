@@ -1,0 +1,336 @@
+coordinator  | Starting >>> multi3_coordinator
+coordinator  | Starting >>> multi3_tests
+coordinator  | Finished <<< multi3_tests [1.86s]
+coordinator  | Finished <<< multi3_coordinator [1.89s]
+coordinator  | 
+coordinator  | Summary: 2 packages finished [2.32s]
+coordinator  | [INFO] [1785943976.065897700] [multi3_coordinator]: Received test_id parameter: test-multi_5_2_t_cleaning_i2_bl1
+coordinator  | [INFO] [1785943976.066508367] [multi3_coordinator]: Testing multi-mission mode.
+coordinator  | [INFO] [1785943976.066840880] [multi3_coordinator]: $$**MISSION_START**$$
+coordinator  | [INFO] [1785943976.067302401] [multi3_coordinator]: Starting the Coordinator node with params ==> test_id = test-multi_5_2_t_cleaning_i2_bl1 || mode = bl1
+coordinator  |  * Serving Flask app 'multi3_coordinator.coordinator'
+coordinator  |  * Debug mode: off
+coordinator  | [INFO] [1785943976.175886402] [multi3_coordinator]: Updated fragments: {'fr_0': {'status': 'waiting', 'fragment_id': 'fr_0', 'age': 0, 'priority': 0, 'robot': 'robot_3', 'initial_wait': 'SYSTEM_START', 'tasks': [{'id': 'vacuum^0', 'vars': {'location': {'x': -1.0792430555795156, 'y': 1.5916154657367096}}}, {'id': 'send_signal|vacuum^0', 'vars': {}}]}, 'fr_1': {'status': 'waiting', 'fragment_id': 'fr_1', 'age': 0, 'priority': 0, 'robot': 'robot_2', 'initial_wait': 'vacuum^0', 'tasks': [{'id': 'mop^0', 'vars': {'location': {'x': -1.0792430555795156, 'y': 1.5916154657367096}}}, {'id': 'send_signal|mop^0', 'vars': {}}, {'id': 'wait_until|mop^1', 'vars': {}}, {'id': 'polish^1', 'vars': {'location': {'x': -0.4529955873104399, 'y': 1.5237107362163336}}}]}, 'fr_2': {'status': 'waiting', 'fragment_id': 'fr_2', 'age': 0, 'priority': 0, 'robot': 'robot_5', 'initial_wait': 'mop^0', 'tasks': [{'id': 'polish^0', 'vars': {'location': {'x': -1.0792430555795156, 'y': 1.5916154657367096}}}, {'id': 'send_signal|polish^0', 'vars': {}}]}, 'fr_3': {'status': 'waiting', 'fragment_id': 'fr_3', 'age': 0, 'priority': 0, 'robot': 'robot_4', 'initial_wait': 'polish^0', 'tasks': [{'id': 'vacuum^1', 'vars': {'location': {'x': -0.4529955873104399, 'y': 1.5237107362163336}}}, {'id': 'mop^1', 'vars': {'location': {'x': -0.4529955873104399, 'y': 1.5237107362163336}}}, {'id': 'send_signal|mop^1', 'vars': {}}]}, 'fr_4': {'status': 'waiting', 'fragment_id': 'fr_4', 'age': 0, 'priority': 999, 'initial_wait': 'SYSTEM_START', 'tasks': [{'id': 'dry', 'vars': {'location': {'x': 0, 'y': -1}}}]}}
+coordinator  | [INFO] [1785943976.177056416] [multi3_coordinator]: Total number of signals: 4
+coordinator  | [INFO] [1785943977.572941432] [multi3_coordinator]: Waiting for all robots to be active...
+coordinator  | [INFO] [1785943977.785990153] [multi3_coordinator]: STARTING the mission since all robots are active...
+coordinator  | [INFO] [1785943979.086038675] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943979.086529278] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943979.087475265] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => idle || robot_4 => idle || robot_3 => idle || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943979.088405398] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785943979.088875234] [multi3_coordinator]: Assigning fragment fr_0 to robot robot_3
+coordinator  | [INFO] [1785943979.094304020] [multi3_coordinator]: Sending Fragment fr_4 to Robot robot_1
+coordinator  | [INFO] [1785943979.097164981] [multi3_coordinator]: Fragments assigned. Time: 4.042 milliseconds
+coordinator  | [INFO] [1785943979.098561141] [multi3_coordinator]: Sending Fragment fr_0 to Robot robot_3
+coordinator  | [INFO] [1785943980.572737432] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943980.573886040] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943980.575604933] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy  || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943980.578665229] [multi3_coordinator]: No fragments assigned. Time: 3.006 milliseconds
+coordinator  | [INFO] [1785943982.099531735] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943982.100508377] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943982.101740382] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943982.103231739] [multi3_coordinator]: No fragments assigned. Time: 2.341 milliseconds
+coordinator  | [INFO] [1785943983.572092248] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943983.573332901] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943983.575764167] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943983.576850058] [multi3_coordinator]: No fragments assigned. Time: 3.638 milliseconds
+coordinator  | [INFO] [1785943985.108730218] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943985.109761810] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943985.111101589] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943985.112244416] [multi3_coordinator]: No fragments assigned. Time: 2.448 milliseconds
+coordinator  | [INFO] [1785943986.572768585] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943986.574484138] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943986.575973140] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943986.578213642] [multi3_coordinator]: No fragments assigned. Time: 3.326 milliseconds
+coordinator  | [INFO] [1785943988.099459564] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943988.100132102] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943988.100774679] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943988.101792522] [multi3_coordinator]: No fragments assigned. Time: 1.280 milliseconds
+coordinator  | [INFO] [1785943989.572889829] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943989.574636343] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943989.576488593] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943989.578019691] [multi3_coordinator]: No fragments assigned. Time: 3.541 milliseconds
+coordinator  | [INFO] [1785943991.099573188] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943991.100314666] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943991.101267715] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943991.102445573] [multi3_coordinator]: No fragments assigned. Time: 1.768 milliseconds
+coordinator  | [INFO] [1785943992.573073593] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943992.574951453] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943992.577254616] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943992.578704856] [multi3_coordinator]: No fragments assigned. Time: 3.957 milliseconds
+coordinator  | [INFO] [1785943994.095418671] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943994.095950648] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943994.096773469] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943994.097731124] [multi3_coordinator]: No fragments assigned. Time: 1.376 milliseconds
+coordinator  | [INFO] [1785943995.573171760] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943995.575016926] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943995.578601592] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943995.579898986] [multi3_coordinator]: No fragments assigned. Time: 5.240 milliseconds
+coordinator  | [INFO] [1785943997.098102516] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943997.098747257] [multi3_coordinator]: Progress: 26.0
+coordinator  | [INFO] [1785943997.099625665] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy dry || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943997.100485530] [multi3_coordinator]: No fragments assigned. Time: 1.460 milliseconds
+coordinator  | [INFO] [1785943998.570734783] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785943998.571348452] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785943998.571854842] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => idle || robot_4 => idle || robot_3 => busy vacuum^0 || robot_2 => idle || robot_5 => idle || 
+coordinator  | [INFO] [1785943998.572581479] [multi3_coordinator]: Robot robot_1 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785943998.573423309] [multi3_coordinator]: Assigning fragment fr_1 to robot robot_1
+coordinator  | [INFO] [1785943998.573802152] [multi3_coordinator]: Robot robot_2 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785943998.579843370] [multi3_coordinator]: Sending Fragment fr_1 to Robot robot_2
+coordinator  | [INFO] [1785943998.580752145] [multi3_coordinator]: Sending Fragment fr_1 to Robot robot_1
+coordinator  | [INFO] [1785943998.585956263] [multi3_coordinator]: Fragments assigned. Time: 3.124 milliseconds
+coordinator  | [INFO] [1785944000.099566731] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944000.100233253] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785944000.100807331] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy  || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944000.102027691] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944000.102801399] [multi3_coordinator]: No fragments assigned. Time: 2.624 milliseconds
+coordinator  | [INFO] [1785944001.573033773] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944001.574818754] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785944001.577124506] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^0 || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944001.578460236] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944001.580738061] [multi3_coordinator]: No fragments assigned. Time: 5.149 milliseconds
+coordinator  | [INFO] [1785944003.096275398] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944003.096717213] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785944003.097319943] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^0 || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944003.097673838] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944003.098567316] [multi3_coordinator]: No fragments assigned. Time: 1.363 milliseconds
+coordinator  | [INFO] [1785944004.573154639] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944004.574782947] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785944004.576575334] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^0 || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944004.579500234] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944004.580818460] [multi3_coordinator]: No fragments assigned. Time: 6.134 milliseconds
+coordinator  | [INFO] [1785944006.099436709] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944006.099965492] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785944006.101241666] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^0 || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944006.101822773] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944006.102549625] [multi3_coordinator]: No fragments assigned. Time: 2.350 milliseconds
+coordinator  | [INFO] [1785944007.572907977] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944007.574668855] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785944007.576553005] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^0 || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944007.578306525] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944007.580198609] [multi3_coordinator]: No fragments assigned. Time: 5.037 milliseconds
+coordinator  | [INFO] [1785944009.098659884] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944009.099269748] [multi3_coordinator]: Progress: 51.0
+coordinator  | [INFO] [1785944009.099966254] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy mop^0 || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944009.100851524] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944009.101784214] [multi3_coordinator]: No fragments assigned. Time: 2.167 milliseconds
+coordinator  | [INFO] [1785944010.572093388] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944010.573397518] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944010.575977073] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy mop^0 || robot_5 => idle || 
+coordinator  | [INFO] [1785944010.577363477] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944010.578831482] [multi3_coordinator]: Assigning fragment fr_2 to robot robot_3
+coordinator  | [INFO] [1785944010.580336587] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944010.586223196] [multi3_coordinator]: Fragments assigned. Time: 10.084 milliseconds
+coordinator  | [INFO] [1785944010.589274476] [multi3_coordinator]: Sending Fragment fr_2 to Robot robot_3
+coordinator  | [INFO] [1785944010.591587995] [multi3_coordinator]: Sending Fragment fr_2 to Robot robot_5
+coordinator  | [INFO] [1785944012.098471935] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944012.099060092] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944012.099861254] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944012.100821664] [multi3_coordinator]: No fragments assigned. Time: 1.679 milliseconds
+coordinator  | [INFO] [1785944013.573289092] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944013.574769034] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944013.576120784] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944013.578661658] [multi3_coordinator]: No fragments assigned. Time: 3.325 milliseconds
+coordinator  | [INFO] [1785944015.100733263] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944015.101431627] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944015.101992281] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944015.103350806] [multi3_coordinator]: No fragments assigned. Time: 1.527 milliseconds
+coordinator  | [INFO] [1785944016.572622253] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944016.573879636] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944016.575138376] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944016.577720807] [multi3_coordinator]: No fragments assigned. Time: 2.482 milliseconds
+coordinator  | [INFO] [1785944018.086844093] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944018.087244655] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944018.087971756] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944018.088693921] [multi3_coordinator]: No fragments assigned. Time: 1.131 milliseconds
+coordinator  | [INFO] [1785944019.571996381] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944019.573017500] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944019.574238093] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944019.575640411] [multi3_coordinator]: No fragments assigned. Time: 2.242 milliseconds
+coordinator  | [INFO] [1785944021.101222103] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944021.101801918] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944021.102275421] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944021.103611660] [multi3_coordinator]: No fragments assigned. Time: 0.977 milliseconds
+coordinator  | [INFO] [1785944022.573348356] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944022.575305022] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944022.577098068] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944022.579052213] [multi3_coordinator]: No fragments assigned. Time: 3.560 milliseconds
+coordinator  | [INFO] [1785944024.100001780] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944024.100621353] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944024.101129016] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944024.102236392] [multi3_coordinator]: No fragments assigned. Time: 1.111 milliseconds
+coordinator  | [INFO] [1785944025.572009750] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944025.572944703] [multi3_coordinator]: Progress: 76.0
+coordinator  | [INFO] [1785944025.574393988] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944025.575845994] [multi3_coordinator]: No fragments assigned. Time: 2.801 milliseconds
+coordinator  | [INFO] [1785944027.099732986] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944027.100418731] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944027.100910256] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => idle || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944027.101901235] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944027.102596911] [multi3_coordinator]: Assigning fragment fr_3 to robot robot_4
+coordinator  | [INFO] [1785944027.104692507] [multi3_coordinator]: Fragments assigned. Time: 2.925 milliseconds
+coordinator  | [INFO] [1785944027.105678875] [multi3_coordinator]: Sending Fragment fr_3 to Robot robot_4
+coordinator  | [INFO] [1785944028.571299352] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944028.572679906] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944028.573611392] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy vacuum^1 || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => busy polish^0 || 
+coordinator  | [INFO] [1785944028.574233126] [multi3_coordinator]: No fragments assigned. Time: 2.207 milliseconds
+coordinator  | [INFO] [1785944030.091379071] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944030.091917854] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944030.092913847] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy vacuum^1 || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944030.093575607] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944030.094180606] [multi3_coordinator]: No fragments assigned. Time: 2.089 milliseconds
+coordinator  | [INFO] [1785944031.573332594] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944031.575049284] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944031.576757678] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy vacuum^1 || robot_3 => busy polish^0 || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944031.578279948] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944031.580326946] [multi3_coordinator]: No fragments assigned. Time: 4.960 milliseconds
+coordinator  | [INFO] [1785944033.100866045] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944033.101459568] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944033.101987729] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy vacuum^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944033.104067863] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944033.105084725] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944033.106120595] [multi3_coordinator]: No fragments assigned. Time: 4.211 milliseconds
+coordinator  | [INFO] [1785944034.571020107] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944034.571921619] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944034.572842752] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy vacuum^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944034.573513223] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944034.574047557] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944034.574948085] [multi3_coordinator]: No fragments assigned. Time: 3.044 milliseconds
+coordinator  | [INFO] [1785944036.094337247] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944036.095038856] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944036.096674282] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy vacuum^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944036.097760640] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944036.099214439] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944036.100375463] [multi3_coordinator]: No fragments assigned. Time: 4.884 milliseconds
+coordinator  | [INFO] [1785944037.571724231] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944037.572634786] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944037.573473046] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944037.574060317] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944037.574890051] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944037.575816131] [multi3_coordinator]: No fragments assigned. Time: 3.266 milliseconds
+coordinator  | [INFO] [1785944039.095337181] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944039.095838936] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944039.096200507] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944039.097388064] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944039.098062471] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944039.099016302] [multi3_coordinator]: No fragments assigned. Time: 2.798 milliseconds
+coordinator  | [INFO] [1785944040.573589917] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944040.575277018] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944040.579291291] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944040.581106334] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944040.583236747] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944040.586073505] [multi3_coordinator]: No fragments assigned. Time: 9.448 milliseconds
+coordinator  | [INFO] [1785944042.096130230] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944042.097072586] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944042.098004103] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944042.098831526] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944042.099671745] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944042.100483443] [multi3_coordinator]: No fragments assigned. Time: 3.472 milliseconds
+coordinator  | [INFO] [1785944043.584219364] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944043.586346445] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944043.587561243] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944043.591266680] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944043.592804700] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944043.595373457] [multi3_coordinator]: No fragments assigned. Time: 9.016 milliseconds
+coordinator  | [INFO] [1785944045.094320354] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944045.094809664] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944045.095233095] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944045.095805992] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944045.096228236] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944045.096674021] [multi3_coordinator]: No fragments assigned. Time: 1.837 milliseconds
+coordinator  | [INFO] [1785944046.573267618] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944046.575016791] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944046.577115790] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944046.579031840] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944046.580709807] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944046.582128068] [multi3_coordinator]: No fragments assigned. Time: 7.112 milliseconds
+coordinator  | [INFO] [1785944048.089514601] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944048.090022298] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944048.090533854] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944048.091138562] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944048.091617102] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944048.092061405] [multi3_coordinator]: No fragments assigned. Time: 2.090 milliseconds
+coordinator  | [INFO] [1785944049.571201679] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944049.572299272] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944049.573032325] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944049.573825177] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944049.574711758] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944049.575649950] [multi3_coordinator]: No fragments assigned. Time: 3.351 milliseconds
+coordinator  | [INFO] [1785944051.098919445] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944051.099662700] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944051.100645169] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944051.101634158] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944051.102808124] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944051.103597739] [multi3_coordinator]: No fragments assigned. Time: 3.873 milliseconds
+coordinator  | [INFO] [1785944052.573223691] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944052.574706478] [multi3_coordinator]: Progress: 101.0
+coordinator  | [INFO] [1785944052.576678930] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944052.578317856] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944052.580013335] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944052.581327942] [multi3_coordinator]: No fragments assigned. Time: 6.518 milliseconds
+coordinator  | [INFO] [1785944054.111661803] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944054.112060859] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944054.112382132] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy wait_until|mop^1 || robot_4 => busy mop^1 || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944054.112964653] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944054.113590695] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944054.114986524] [multi3_coordinator]: No fragments assigned. Time: 1.956 milliseconds
+coordinator  | [INFO] [1785944055.571838648] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944055.572737760] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944055.573596698] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy wait_until|mop^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944055.574986277] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944055.575970467] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944055.576753959] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944055.577636792] [multi3_coordinator]: No fragments assigned. Time: 4.865 milliseconds
+coordinator  | [INFO] [1785944057.099760913] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944057.100730403] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944057.101221760] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy polish^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944057.102794846] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944057.103317187] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944057.103958549] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944057.105516184] [multi3_coordinator]: No fragments assigned. Time: 4.267 milliseconds
+coordinator  | [INFO] [1785944058.571128607] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944058.571677262] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944058.572076252] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy polish^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944058.572704341] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944058.573150531] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944058.573679044] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944058.574100006] [multi3_coordinator]: No fragments assigned. Time: 2.471 milliseconds
+coordinator  | [INFO] [1785944060.098686861] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944060.099273836] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944060.099933308] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy polish^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944060.100999974] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944060.101573707] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944060.102153923] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944060.103293332] [multi3_coordinator]: No fragments assigned. Time: 3.453 milliseconds
+coordinator  | [INFO] [1785944061.571755530] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944061.572631925] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944061.573899474] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy polish^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944061.575037515] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944061.576811660] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944061.577791873] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944061.579124728] [multi3_coordinator]: No fragments assigned. Time: 6.071 milliseconds
+coordinator  | [INFO] [1785944063.098693596] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944063.099209074] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944063.099947027] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy polish^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944063.100468917] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944063.101231270] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944063.102043199] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944063.102970870] [multi3_coordinator]: No fragments assigned. Time: 3.342 milliseconds
+coordinator  | [INFO] [1785944064.573395869] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944064.575213424] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944064.577188810] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy polish^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944064.578869226] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944064.580516378] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944064.581513116] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944064.583234700] [multi3_coordinator]: No fragments assigned. Time: 8.062 milliseconds
+coordinator  | [INFO] [1785944066.100204518] [multi3_coordinator]: $$*MISSION_COMPLETED*$$
+coordinator  | [INFO] [1785944066.100930227] [multi3_coordinator]: ------Assignment window------
+coordinator  | [INFO] [1785944066.101977891] [multi3_coordinator]: Progress: 126.0
+coordinator  | [INFO] [1785944066.102997558] [multi3_coordinator]: $$**ROBOTS_STATE**$$|| robot_1 => busy polish^1 || robot_4 => idle || robot_3 => idle || robot_2 => busy polish^1 || robot_5 => idle || 
+coordinator  | [INFO] [1785944066.103707339] [multi3_coordinator]: Robot robot_4 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944066.104835101] [multi3_coordinator]: Robot robot_3 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944066.105459886] [multi3_coordinator]: Robot robot_5 has finished its workload, checking for waiting fragments from further missions
+coordinator  | [INFO] [1785944066.106343387] [multi3_coordinator]: No fragments assigned. Time: 4.519 milliseconds
+coordinator  | [INFO] [1785944075.073098472] [multi3_coordinator]: $$*MISSION_STOPPED*$$
+coordinator  | [INFO] [1785944075.094073366] [multi3_coordinator]: The package path is: /multi3_coord_ws/src/multi3_tests
+coordinator  | [INFO] [1785944075.096245616] [multi3_coordinator]: Writing finished signal in test-multi_5_2_t_cleaning_i2_bl1_finished.json...

@@ -3,7 +3,8 @@ import os
 import yaml
 import time
 
-test_path = "./coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/tests/"
+# test_path = "./coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/tests/"
+test_path = "./coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/multi_mission_tests/"
 base_compose = {
     'services': {
         'coordinator': {
@@ -76,7 +77,8 @@ def generate_docker_compose(test_id):
                 'build': './coordinator',
                 'environment': [
                     'ROS_DOMAIN_ID=55',
-                    'MODE=bl_0'
+                    'MODE=bl_0',
+                    'MULTI_MISSION=1'
                 ],
                 'volumes': [
                     './output:/multi3_coord_ws/src/multi3_tests/multi3_tests/results'
@@ -109,16 +111,32 @@ def check_progress(test_id):
 def main():
     files = os.listdir(test_path)
     for i,test_id in enumerate(files):
+        if os.path.exists(f"./output/{test_id}_finished.json"):
+            print(f"Test {test_id} already done, skipping...")
+            continue
         print(f"\n\n***\Running the Test {test_id} || {i+1}/{len(files)}***")
         generate_docker_compose(test_id)
         start_docker_compose(f"docker-compose-{test_id}.yaml")
         time.sleep(2)
     
+        consecutive_unreads = 0
         while not os.path.exists(f"./output/{test_id}_finished.json"):
+            progress = check_progress(test_id)
+            if progress == "Progress: Unread!":
+                consecutive_unreads += 1
             print(check_progress(test_id))
+            if consecutive_unreads > 10:
+                print("No progress detected for a while, stopping and restarting the test...")
+                stop_docker_compose(f"docker-compose-{test_id}.yaml")
+                time.sleep(5)
+                start_docker_compose(f"docker-compose-{test_id}.yaml")
+                time.sleep(2)
+                consecutive_unreads = 0
+                # break
             time.sleep(2)
         print("Detected finish of mission execution...\nPostprocessing...")
-        cmd = f"docker compose -f docker-compose-{test_id}.yaml logs coordinator >> ./test_logs/{test_id}.log"
+        # cmd = f"docker compose -f docker-compose-{test_id}.yaml logs coordinator >> ./output/test_logs/{test_id}.log"
+        cmd = f"docker compose -f docker-compose-{test_id}.yaml logs coordinator >> ./output/test-multi_logs/{test_id}.log"
         os.popen(cmd)
         time.sleep(1)
         stop_docker_compose(f"docker-compose-{test_id}.yaml")

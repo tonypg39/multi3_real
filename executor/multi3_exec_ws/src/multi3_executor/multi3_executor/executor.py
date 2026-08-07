@@ -75,6 +75,7 @@ class FragmentExecutor(Node):
             }
             self.signal_pub_timer = self.create_timer(5.,self.virtual_battery_callback)
             self.env_states = self.read_env_states(test_id, int(sample_id))
+            self.get_logger().info(f"Env_states read = {self.env_states}")
         else:
             self.virtual_state = None
             self.real_robot_namespace = TB_ID
