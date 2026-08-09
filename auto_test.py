@@ -1,10 +1,15 @@
-import subprocess
+import argparse
 import os
-import yaml
+import subprocess
 import time
 
-# test_path = "./coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/tests/"
-test_path = "./coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/multi_mission_tests/"
+import yaml
+
+TEST_PATHS = {
+    "single": "./coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/tests/",
+    "multi": "./coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/multi_mission_tests/",
+}
+
 base_compose = {
     'services': {
         'coordinator': {
@@ -70,6 +75,17 @@ def generate_executor(idx,test_id):
             'privileged': True
         }
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run the automated mission tests in single or multi mode.")
+    parser.add_argument(
+        "--mode",
+        choices=sorted(TEST_PATHS.keys()),
+        default="single",
+        help="Execution mode: single or multi (default: single)",
+    )
+    return parser.parse_args()
+
+
 def generate_docker_compose(test_id):
     compose = {
         'services': {
@@ -77,8 +93,7 @@ def generate_docker_compose(test_id):
                 'build': './coordinator',
                 'environment': [
                     'ROS_DOMAIN_ID=55',
-                    'MODE=bl_0',
-                    'MULTI_MISSION=1'
+                    'MODE=bl_0'
                 ],
                 'volumes': [
                     './output:/multi3_coord_ws/src/multi3_tests/multi3_tests/results'
@@ -109,8 +124,14 @@ def check_progress(test_id):
 
 
 def main():
-    files = os.listdir(test_path)
-    for i,test_id in enumerate(files):
+    args = parse_args()
+    test_path = TEST_PATHS[args.mode]
+    log_dir = f"./output/test-{args.mode}_logs"
+    os.makedirs(log_dir, exist_ok=True)
+
+    print(f"Running in {args.mode} mode using {test_path}")
+    files = sorted(os.listdir(test_path))
+    for i, test_id in enumerate(files):
         if os.path.exists(f"./output/{test_id}_finished.json"):
             print(f"Test {test_id} already done, skipping...")
             continue
@@ -118,7 +139,7 @@ def main():
         generate_docker_compose(test_id)
         start_docker_compose(f"docker-compose-{test_id}.yaml")
         time.sleep(2)
-    
+
         consecutive_unreads = 0
         while not os.path.exists(f"./output/{test_id}_finished.json"):
             progress = check_progress(test_id)
@@ -132,17 +153,13 @@ def main():
                 start_docker_compose(f"docker-compose-{test_id}.yaml")
                 time.sleep(2)
                 consecutive_unreads = 0
-                # break
             time.sleep(2)
         print("Detected finish of mission execution...\nPostprocessing...")
-        # cmd = f"docker compose -f docker-compose-{test_id}.yaml logs coordinator >> ./output/test_logs/{test_id}.log"
-        cmd = f"docker compose -f docker-compose-{test_id}.yaml logs coordinator >> ./output/test-multi_logs/{test_id}.log"
+        cmd = f"docker compose -f docker-compose-{test_id}.yaml logs coordinator >> {log_dir}/{test_id}.log"
         os.popen(cmd)
         time.sleep(1)
         stop_docker_compose(f"docker-compose-{test_id}.yaml")
-        
-        
+
 
 if __name__ == "__main__":
     main()
-    # generate_docker_compose("test_5_10_t_cleaning_i0_bl1")

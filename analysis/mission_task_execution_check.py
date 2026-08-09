@@ -174,8 +174,8 @@ def check_precedence_constraints_for_all_tests(all_tests_data, task_precedences)
     return results
 
 
-def print_result_summary(results):
-    print("--- Mission execution check report ---")
+def print_result_summary(results, config):
+    print(f"--- Mission execution check report ({config}) ---")
     print(f"Missions checked: {results['test_missions']}")
     print(f"Successes: {results['successes']}")
     print(f"Failures: {results['failures']}")
@@ -190,12 +190,16 @@ def print_result_summary(results):
                     for required_completion in violation["required_completions"]:
                         print(f"\t\t- {required_completion['task']} (ended at {required_completion['end']})")
 
+    print("\n")
 
-with open("../output/robot_data.json", "r") as f:
-    data = json.load(f)
+configurations = ["single-mission", "multi-mission/atstart-income", "multi-mission/online-income"]
 
-results = check_precedence_constraints_for_all_tests(data, task_precedences)
+for config in configurations:
+    with open(f"../output/{config}/robot_data.json", "r") as f:
+        data = json.load(f)
 
-json.dump(results, open("../output/execution_check_results_new.json", "w"), indent=4)
+    results = check_precedence_constraints_for_all_tests(data, task_precedences)
 
-print_result_summary(results)
+    json.dump(results, open(f"../output/{config}/execution_check_results.json", "w"), indent=4)
+
+    print_result_summary(results, config)

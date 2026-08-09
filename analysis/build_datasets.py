@@ -206,33 +206,36 @@ def main():
         "end_label": "MISSION_COMPLETED",
         "status_label": "ROBOTS_STATE",
     }
-    
-    results_path = "../output/test_logs/"
 
-    global_results = {}
-    for filename in os.listdir(results_path):
-        file_path = os.path.join(results_path, filename)
-        if os.path.isfile(file_path):  # Check if it's a file
-            print(f"Processing File: {filename}")
-            result_file = filename
-            with open(results_path + result_file, "r") as f:
-                log_lines = f.readlines()
-            
-            robot_count = int(result_file.split("_")[1])
-            mission_times = compute_mission_times(log_lines,markers)
-            idle_times, idle_evolution = compute_idle_times(log_lines,markers,mission_times,robot_count)
-            global_results[filename] = {
-                "mission_times": mission_times,
-                "idle_times": idle_times,
-                "idle_evolution": idle_evolution
-            }
+    configurations = ["single-mission", "multi-mission/atstart-income", "multi-mission/online-income"]
 
-    mission_data = process_metrics(global_results)
-    df = pd.DataFrame(mission_data)
-    df.to_csv("../output/mission_data.csv",index=False)
+    for config in configurations:
+        results_path = f"../output/{config}/logs/"
 
-    idle_data = process_robot_idle_times(global_results)
-    json.dump(idle_data, open("../output/robot_data.json","w"))
+        global_results = {}
+        for filename in os.listdir(results_path):
+            file_path = os.path.join(results_path, filename)
+            if os.path.isfile(file_path):  # Check if it's a file
+                print(f"Processing File: {filename}")
+                result_file = filename
+                with open(results_path + result_file, "r") as f:
+                    log_lines = f.readlines()
+                
+                robot_count = int(result_file.split("_")[1])
+                mission_times = compute_mission_times(log_lines,markers)
+                idle_times, idle_evolution = compute_idle_times(log_lines,markers,mission_times,robot_count)
+                global_results[filename] = {
+                    "mission_times": mission_times,
+                    "idle_times": idle_times,
+                    "idle_evolution": idle_evolution
+                }
+
+        mission_data = process_metrics(global_results)
+        df = pd.DataFrame(mission_data)
+        df.to_csv(f"../output/{config}/mission_data.csv",index=False)
+
+        idle_data = process_robot_idle_times(global_results)
+        json.dump(idle_data, open(f"../output/{config}/robot_data.json","w"))
 
 if __name__ == "__main__":
     main()

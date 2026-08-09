@@ -78,17 +78,23 @@ ros2 run multi3_tests generate
 ```
 
 ### Simulation
-To execute the simulation, we run the `auto_test.py` script, which inspects the tests folder inside of `coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/tests`:
+To execute the simulation, we run the `auto_test.py` script. By default it runs in `single mission` mode (without simulating dynamic mission arrival) and inspects the tests folder inside of `coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/tests`.
 
 ```
 python3 auto_test.py
+python3 auto_test.py --mode single
+python3 auto_test.py --mode multi
 ```
+
+The `--mode` argument accepts `single` or `multi` and selects the corresponding test folder:
+- `single` uses `coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/tests`, it only runs the main mission over the four usecases.
+- `multi` uses `coordinator/multi3_coord_ws/src/multi3_tests/multi3_tests/multi_mission_tests`, it simulates the online arrival of the `dry` mission in the `cleaning` scenario.
 
 This script first creates one Docker Compose file per every test that will be run, describing the configuration of the containers that will need to be created for Multi3, this amount is 1 Coordinator + N executors (depends on the robot count of the particular test).
 
 Afterwards, it proceeds to execute each of the test cases, one by one, by executing the corresponding docker-compose file.
 
-The output logs of the test cases can be found in `/output/test_logs`.
+The output logs of the test cases can be found in `/output/test-single_logs` for single-mode runs and `/output/test-multi_logs` for multi-mode runs.
 
 
 

@@ -294,10 +294,10 @@ class CoordinatorNode(Node):
         # Given a fragment, this method returns a priority, computed as priority + 0.01 age
         return fragment["priority"] + 0.01 * fragment["age"]
 
-    def generate_assigments(self, idle_robots, fragments):
+    def generate_assigments(self, idle_robots, executable_fragments):
         assignment_dict = {}
         # sorted_frags = sorted(fragments, key= lambda x: x["priority"], reverse=True)
-        sorted_frags = sorted(fragments, key= lambda x: self.get_fragment_pi(x), reverse=True)
+        sorted_frags = sorted(executable_fragments, key= lambda x: self.get_fragment_pi(x), reverse=True)
         new_assigned_robots = set()
 
         if self.mode != "multi3": # Baseline assignment
@@ -319,7 +319,7 @@ class CoordinatorNode(Node):
                 if "robot" in f.keys():
                     # STATIC ASSIGNMENT, we expect the keyword robot associated with each fragment
                     # The fragments are a construct with all of the tasks assigned to a specific robot
-                    if f["robot"] in idle_robots and f["robot"] not in new_assigned_robots:
+                    if f["robot"] in idle_robots and f["robot"] not in new_assigned_robots and f["fragment_id"] not in assigned_fragments and self.check_eligibility(f["robot"],f):
                             self.fragments[f["fragment_id"]]["status"] = "executed"
                             assignment_dict[f["robot"]] = f.copy()
                             new_assigned_robots.add(f["robot"])
@@ -373,7 +373,7 @@ class CoordinatorNode(Node):
                 ir.append(k)
         return ir
     
-    def get_active_fragments(self):
+    def get_executable_fragments(self):
         active_frags = []
         for frag in self.fragments.values():
             
@@ -459,8 +459,8 @@ class CoordinatorNode(Node):
         # self.get_logger().info(f"Mission signals so far:{self.signal_states} ")
         progress = round(len(self.signal_states)*100/self.total_number_signals+1,2)
         self.get_logger().info(f"Progress: {progress}")
-        robots = self.get_idle_robots()
-        fragments = self.get_active_fragments()
+        idle_robots = self.get_idle_robots()
+        executable_fragments = self.get_executable_fragments()
 
         # self.get_logger().info(f"Fragments: {self.fragments}")
         # self.get_logger().info(f"Active fragments: {fragments}")
@@ -469,7 +469,7 @@ class CoordinatorNode(Node):
         # self.log_futures()
         self.log_robots()
         # self.get_logger().info(f"The active robots are: {robots}")
-        assignments = self.generate_assigments(robots, fragments)
+        assignments = self.generate_assigments(idle_robots, executable_fragments)
         # self.get_logger().info(f"Assigments: {assignments}")
 
         if len(assignments) > 0:
@@ -482,7 +482,7 @@ class CoordinatorNode(Node):
             #         futures.append(executor.submit(self.send_fragment_to_robot,robot, fragment))
             
         # Increase the age of the unpicked fragments
-        for f in fragments:
+        for f in executable_fragments:
             if self.fragments[f["fragment_id"]]["status"] == "waiting":
                 self.fragments[f["fragment_id"]]["age"] += 1
 
